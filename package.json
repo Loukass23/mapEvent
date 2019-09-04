@@ -5,15 +5,23 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "react-native"
   },
   "dependencies": {
+    "@testing-library/react-native": "^4.0.8",
     "expo": "^34.0.1",
+    "jest": "^24.9.0",
     "react": "16.8.3",
-    "react-dom": "^16.8.6",
+    "react-dom": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
     "react-native-maps": "^0.25.0",
-    "react-native-web": "^0.11.4"
+    "react-native-paper": "^2.16.0",
+    "react-native-web": "^0.11.4",
+    "react-test-renderer": "16.8"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
@@ -21,6 +29,7 @@
     "@types/react-native": "^0.60.11",
     "@types/react-test-renderer": "^16.9.0",
     "babel-preset-expo": "^6.0.0",
+    "react-addons-test-utils": "^15.6.2",
     "react-native-typescript-transformer": "^1.2.13",
     "ts-jest": "^24.0.2",
     "typescript": "^3.6.2"

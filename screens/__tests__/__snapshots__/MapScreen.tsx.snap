@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TestMap renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "paddingBottom": 1334,
+    }
+  }
+>
+  <MapView
+    onMapReady={[Function]}
+    onRegionChangeComplete={[Function]}
+    region={
+      Object {
+        "latitude": 37.78825,
+        "latitudeDelta": 0.0922,
+        "longitude": -122.4324,
+        "longitudeDelta": 0.0421,
+      }
+    }
+    showsMyLocationButton={true}
+    showsUserLocation={true}
+    style={
+      Object {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+</View>
+`;
