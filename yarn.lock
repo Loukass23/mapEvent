@@ -5769,10 +5769,10 @@ react-native-branch@~3.0.1:
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-3.0.1.tgz#5b07b61cbd290168cd3c3662e017ebe0f356d2ca"
   integrity sha512-vbcYxPZlpF5f39GAEUF8kuGQqCNeD3E6zEdvtOq8oCGZunHXlWlKgAS6dgBKCvsHvXgHuMtpvs39VgOp8DaKig==
 
-react-native-maps@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.25.0.tgz#81bc51eb50e33811a9e1c345cc48869413ead67d"
-  integrity sha512-PFJuW1pt+HnnnN0m0OGk29RSvICFVkK/DScX6cUk0SuCSN2DAHx0y6y57lZyYXcYqU4J4usNpfxgp/ccjASDiw==
+react-native-maps@0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.24.0.tgz#6627942e9357768c96ddd22bf66d7e88084d19b0"
+  integrity sha512-wfDdCMA09Xx8zHKD7+kzWfp7rQPCrYb2j4TWgCAjnFIhk9WZxqAKZSQF5olLBVF+Fhl7mTRoij8GTUOX3inoIg==
 
 react-native-paper@^2.16.0:
   version "2.16.0"

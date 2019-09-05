@@ -6,11 +6,15 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import MapScreen from './screens/MapScreen';
 import LocationContextProvider from './context/LocationContext'
+import EventContextProvider from './context/EventContext'
+import { LocationContext } from './context/LocationContext'
+
 
 
 
 export default function App() {
   const [isReady, setIsReady] = useState<Boolean | undefined>(false);
+
 
   const _cacheResourcesAsync = async () => {
     await Promise.all([
@@ -26,7 +30,6 @@ export default function App() {
     ]);
 
   }
-
   if (!isReady) {
     console.log('isReady', isReady)
     return (
@@ -41,7 +44,9 @@ export default function App() {
     return (
       <View style={styles.container}>
         <LocationContextProvider>
-          <MapScreen />
+          <EventContextProvider>
+            <MapScreen />
+          </EventContextProvider>
         </LocationContextProvider>
       </View>
     );
@@ -51,7 +56,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject
+    //flex: 1,
     // backgroundColor: '#fff',
     // alignItems: 'center',
     // justifyContent: 'center',

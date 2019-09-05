@@ -19,23 +19,10 @@ export const LocationContext = createContext<LocationContext>(
             longitudeDelta: 0
         },
         _getLocationAsync: () => {
-            throw new Error('updateCount() not implemented');
+            throw new Error('_getLocationAsync() not implemented');
         }
     }
 )
-
-
-// export const _getLocationAsync = async () => {
-//     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-//     if (status !== 'granted') {
-//         console.log('Permission to access location was denied')
-//     }
-
-//     let location = await Location.getCurrentPositionAsync({});
-//     console.log('location :', location);
-//     // this.setState({ location });
-//     setUserRegion()
-// };
 
 const LocationContextProvider = (props) => {
     const [userRegion, setUserRegion] = useState<Region | undefined>({
@@ -52,8 +39,6 @@ const LocationContextProvider = (props) => {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        console.log('location :', location);
-        // this.setState({ location });
         const { latitude, longitude } = location.coords
         setUserRegion({
             ...userRegion,

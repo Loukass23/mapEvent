@@ -2,18 +2,20 @@ import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
+import { EventContext } from '../context/EventContext'
 
 const { width, height } = Dimensions.get('window');
 
 
 const MapScreen = () => {
-
-
-
-
     const { userRegion, _getLocationAsync } = useContext<LocationContext>(LocationContext)
+    const { events } = useContext<EventContext>(EventContext)
+    console.log('events :', events);
     useEffect(() => {
-        // _getLocationAsync()
+        _getLocationAsync()
+    }, []);
+    useEffect(() => {
+        setRegion(userRegion)
     }, [userRegion]);
 
 
@@ -24,7 +26,7 @@ const MapScreen = () => {
     }
 
     const [region, setRegion] = useState<Region | undefined>(userRegion);
-    console.log('region :', userRegion);
+    console.log('userRegion :', userRegion);
     return (
         <View style={{ paddingBottom: hackHeight }}>
             <MapView
