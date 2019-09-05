@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logoTemp.png",
+    "icon": "./assets/images/logoTemp.png",
     "splash": {
-      "image": "./assets/logoTemp.png",
+      "image": "./assets/images/logoTemp.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

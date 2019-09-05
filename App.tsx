@@ -5,7 +5,7 @@ import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import MapScreen from './screens/MapScreen';
-import { MyCard } from './components/MyCard';
+import LocationContextProvider from './context/LocationContext'
 
 
 
@@ -40,21 +40,12 @@ export default function App() {
   else
     return (
       <View style={styles.container}>
-        <MapScreen />
+        <LocationContextProvider>
+          <MapScreen />
+        </LocationContextProvider>
       </View>
     );
 }
-
-
-
-// return (
-//   <View style={styles.container}>
-//     {/* <MyCard Title="Hello" Body="My beautifull card" Img="https://res.cloudinary.com/ds3w3iwbk/image/upload/v1560349735/MERN/20131227_134911.jpg" /> */}
-//     {/* <Hello name={'Lucas'} enthusiasmLevel={3} /> */}
-//     <MapScreen />
-//   </View>
-// );
-
 
 
 
