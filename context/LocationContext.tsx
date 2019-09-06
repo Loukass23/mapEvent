@@ -45,7 +45,6 @@ const LocationContextProvider = (props) => {
             latitude,
             longitude
         })
-        console.log('userRegion :', userRegion);
     };
 
     return (

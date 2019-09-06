@@ -1,15 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
-import MapView, { Region } from 'react-native-maps';
+import MapView, { Region, Marker, Callout } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
-import { EventContext } from '../context/EventContext'
+import { EventContext, EventList } from '../context/EventContext'
+import ClusterMarker from '../components/clusters/ClusterMarker';
+import { getCluster } from '../components/clusters/MapUtils';
+import { markerImages } from '../constants/Markers';
+import Colors from '../constants/Colors';
 
 const { width, height } = Dimensions.get('window');
 
 
 const MapScreen = () => {
     const { userRegion, _getLocationAsync } = useContext<LocationContext>(LocationContext)
-    const { events } = useContext<EventContext>(EventContext)
+    const events = useContext<EventList>(EventContext)
     console.log('events :', events);
     useEffect(() => {
         _getLocationAsync()
@@ -18,6 +22,7 @@ const MapScreen = () => {
         setRegion(userRegion)
     }, [userRegion]);
 
+    const [marker, setMarker] = useState<Event | undefined>();
 
     const [hackHeight, setHackHeight] = useState<number | undefined>(height);
     const showsMyLocationButtonWorkaroudFix = () => {
@@ -27,6 +32,21 @@ const MapScreen = () => {
 
     const [region, setRegion] = useState<Region | undefined>(userRegion);
     console.log('userRegion :', userRegion);
+
+    // const allCoords = events.map(event => ({
+    //     ...event,
+    // geometry: {
+    //     coordinates: [event.coordinates.longitude, event.coordinates.latitude],
+    // },
+    // category: event.category,
+    // title: event.title,
+    // body: event.body,
+    // img: event.img,
+    //id: issue.id
+    // }));
+    console.log('events :', events);
+    const cluster = getCluster(events, region);
+
     return (
         <View style={{ paddingBottom: hackHeight }}>
             <MapView
@@ -38,15 +58,73 @@ const MapScreen = () => {
                 region={region}
                 onRegionChangeComplete={region => setRegion(region)}
 
-            />
+            >
+                {cluster.markers.map((marker, index) => renderMarker(marker, index))}
+            </MapView>
         </View>
     )
 }
 
+const renderMarker = (marker, index: number) => {
+    console.log('marker', marker)
+    const key = index + marker.geometry.coordinates[0];
+    // If a cluster
+    if (marker.properties) {
+        return (
+            <Marker
+                key={key}
+                coordinate={{
+                    latitude: marker.geometry.coordinates[1],
+                    longitude: marker.geometry.coordinates[0]
+                }}
+            >
+                <ClusterMarker count={marker.properties.point_count} />
+            </Marker>
+        );
+    }
+    // If a single marker
+    return (
+        <Marker
+            key={key}
+            style={{
+                width: 100,
+                height: 100,
+            }}
+            image={markerImages[marker.category]}
+            coordinate={{
+                latitude: marker.geometry.coordinates[1],
+                longitude: marker.geometry.coordinates[0]
+            }}
+            title={marker.category}
+            description={marker.description}
+        >
+
+            <Callout
+                onPress={() => this.markerClick(marker)}>
+                <View >
+                    <Text style={styles.makerTitle}>
+                        {marker.category}</Text>
+                    <Text style={styles.makerText}> {marker.title}</Text>
+                </View>
+            </Callout>
+        </Marker>
+    );
+};
 export default MapScreen
 
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
     },
+    makerTitle: {
+        fontSize: 12,
+        color: Colors.secondary,
+        lineHeight: 20,
+        textAlign: 'center',
+    },
+    makerText: {
+        fontSize: 12,
+        lineHeight: 20,
+        textAlign: 'center',
+    }
 })

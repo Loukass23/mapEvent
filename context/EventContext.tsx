@@ -1,40 +1,74 @@
 import React, { useState, createContext } from 'react'
-import { LatLng, Region } from 'react-native-maps';
-
+import { LatLng } from 'react-native-maps';
 
 export type Event = {
-    position: Region,
+    id: number,
+    category: string,
+    // coordinates: LatLng,
+    geometry: {
+        coordinates: Array<number | number>,
+    },
     title: string,
     body?: string,
-    img?: string
-};
+    img?: string,
 
-export type EventContext = {
-    events: Array<Event>
 }
-export const EventContext = createContext<EventContext>(null)
+// interface Event extends Partial<GeoJSON.Point> {
+//     type: any,
+//     coordinates: Array<number>,
+//     id: number,
+//     category: string,
+//     ///coordinates: LatLng,
+//     // geometry: {
+//     //     coordinates: Array<number | number>,
+//     // },
+//     title: string,
+//     body?: string,
+//     img?: string,
+// }
+// export type EventList = {
+//     events: Array<Event>,
+//     //events: GeoJSON.Feature<Event>,
+
+// }
+// export type EventList = GeoJSON.Feature<Event>
+
+
+export type EventList = Array<Event>
+
+export const EventContext = createContext<EventList>(null)
 
 const EventContextProvider = (props) => {
     const [events, setEvents] = useState([
         {
-            position: {
-                latitude: 0,
-                longitude: 0,
-                latitudeDelta: 0,
-                longitudeDelta: 0
-            }, title: 'My first event'
+            id: 1,
+            // coordinates: {
+            //     latitude: 37.421,
+            //     longitude: -121.0,
+            // }
+            geometry: {
+                coordinates: [-121.0, 37.421],
+            }
+            ,
+            title: 'My first event',
+            category: 'Social',
         },
         {
-            position: {
-                latitude: 0,
-                longitude: 0,
-                latitudeDelta: 0,
-                longitudeDelta: 0
-            }, title: 'Another event'
+            id: 2,
+            geometry: {
+                coordinates: [-121.3, 37.423],
+            }
+            // coordinates: {
+            //     latitude: 37.423,
+            //     longitude: -121.3,
+
+            // }
+            , title: 'Another event',
+            category: 'Market',
         },
     ])
     return (
-        <EventContext.Provider value={{ events }}>
+        <EventContext.Provider value={events}>
             {props.children}
         </EventContext.Provider>
     )
