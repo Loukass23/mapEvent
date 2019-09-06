@@ -17,7 +17,7 @@ export const getRegion = (latitude: number, longitude: number, latitudeDelta: nu
     };
 }
 
-export const getCluster = (events: EventList, region: Region) => {
+export const getCluster = (events: any, region: Region) => {
     const cluster = new supercluster({
         radius: 50,
         maxZoom: 16,

@@ -11,6 +11,7 @@ export type Event = {
     title: string,
     body?: string,
     img?: string,
+    property?: any
 
 }
 // interface Event extends Partial<GeoJSON.Point> {
@@ -39,7 +40,9 @@ export type EventList = Array<Event>
 export const EventContext = createContext<EventList>(null)
 
 const EventContextProvider = (props) => {
-    const [events, setEvents] = useState([
+    const [markerDetails, setMarkerDetails] = useState<Event>()
+
+    const [events, setEvents] = useState<EventList>([
         {
             id: 1,
             // coordinates: {
