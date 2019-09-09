@@ -1,20 +1,26 @@
 import * as React from "react";
-import { StyleSheet, Text, View, Image, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-native';
 import { EventLib } from '../../index'
+import { ActivityIndicator } from 'react-native';
+import { Image } from 'react-native-elements';
+
 const { height, width } = Dimensions.get('window');
+
 
 
 export const MarkerDetails: React.FC<EventLib.Event> =
     (marker: EventLib.Event) => (
         <View style={styles.container} >
 
-            {/* {img &&
-                <ImageBackground
-                    source={{ uri: img }}
-                    style={styles.coverImage}>
-                    <Text style={styles.insideText}>{title}</Text>
-                </ImageBackground>
-            } */}
+            {marker.img &&
+                <View>
+                    <Image
+                        source={{ uri: marker.img }}
+                        style={styles.coverImage}
+                        PlaceholderContent={<ActivityIndicator />}
+                    />
+                </View>
+            }
             <Text style={styles.bodyText} >{marker.title}</Text>
         </View>
     )
@@ -22,7 +28,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 50,
+        marginTop: 5,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',

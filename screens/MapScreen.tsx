@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableHighlight, Button } from 'react-native';
+import React, { useState, useContext, useEffect, FC } from 'react'
+import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
 import MapView, { Region, Marker, Callout } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
 import { EventContext, } from '../context/EventContext'
@@ -10,9 +10,15 @@ import { markerImages } from '../constants/Markers';
 import Colors from '../constants/Colors';
 import { MarkerDetails } from '../components/events/MarkerDetails';
 import { pick } from 'lodash';
-const { width, height } = Dimensions.get('window');
+import { Button, Icon } from 'react-native-elements';
+import MenuButton from '../components/navigation/MenuButton';
 
-const MapViewComp = () => {
+const { width, height } = Dimensions.get('window');
+interface Props {
+    navigation: any
+}
+const MapScreen: FC<Props> = ({ navigation }) => {
+    console.log('propsnav', navigation)
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
     const events = useContext(EventContext)
 
@@ -23,8 +29,8 @@ const MapViewComp = () => {
 
     const [hackHeight, setHackHeight] = useState<number | undefined>(height);
     const showsMyLocationButtonWorkaroudFix = () => {
-        setTimeout(() => setHackHeight(height + 1), 1500);
-        setTimeout(() => setHackHeight(height - 1), 2000);
+        setTimeout(() => setHackHeight(height + 1), 500);
+        setTimeout(() => setHackHeight(height - 1), 1000);
     }
 
     const [region, setRegion] = useState<Region | undefined>(userRegion);
@@ -96,6 +102,8 @@ const MapViewComp = () => {
                 >
                     {cluster.markers.map((marker, index) => renderMarker(marker, index))}
                 </MapView>
+
+                <MenuButton navigation={navigation} />
             </View>
         )
     else return (
@@ -105,13 +113,13 @@ const MapViewComp = () => {
                 title={'back'}
                 onPress={() => setMarker(null)}
             />
-            <MarkerDetails {...pick(marker, 'id', 'title', 'category', 'geometry')} />
+            <MarkerDetails {...pick(marker, 'id', 'title', 'category', 'geometry', 'img')} />
         </View>
     )
 
 
 }
-export default MapViewComp
+export default MapScreen
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
@@ -126,5 +134,18 @@ const styles = StyleSheet.create({
         fontSize: 12,
         lineHeight: 20,
         textAlign: 'center',
+    },
+    menuButton: {
+        backgroundColor: 'rgba(250, 250, 250, .8)',
+        position: 'absolute',//use absolute position to show button on top of the map
+        top: 10, //for center align
+        left: 10,
+        width: 40,
+        height: 40,
+        alignSelf: 'flex-start',
+        borderRadius: 3,
+        alignContent: 'center',
+        justifyContent: 'center'
+
     }
 })

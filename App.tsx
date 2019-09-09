@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { FC, useState } from 'react';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import MapScreen from './screens/MapScreen';
 import LocationContextProvider from './context/LocationContext'
 import EventContextProvider from './context/EventContext'
-import { LocationContext } from './context/LocationContext'
+import AppContainer from './routes';
 
 
 
-
-export default function App() {
+const App: FC = () => {
   const [isReady, setIsReady] = useState<Boolean | undefined>(false);
 
 
@@ -43,15 +41,16 @@ export default function App() {
   else
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="blue" hidden={true} barStyle="dark-content" />
         <LocationContextProvider>
           <EventContextProvider>
-            <MapScreen />
+            <AppContainer />
           </EventContextProvider>
         </LocationContextProvider>
       </View>
     );
 }
-
+export default App
 
 
 const styles = StyleSheet.create({

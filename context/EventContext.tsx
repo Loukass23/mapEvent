@@ -11,7 +11,8 @@ const event1: EventLib.Event = {
     },
 
     title: 'test',
-    category: 'test'
+    category: 'test',
+    img: 'https://res.cloudinary.com/ds3w3iwbk/image/upload/v1560349630/MERN/20170409_193026.jpg'
 }
 const event2: EventLib.Event = {
     id: 1,
