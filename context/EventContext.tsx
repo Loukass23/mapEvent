@@ -1,7 +1,7 @@
 import React, { useState, createContext } from 'react'
 import { LatLng } from 'react-native-maps';
 
-export type Event = {
+export interface Event {
     id: number,
     category: string,
     // coordinates: LatLng,
@@ -40,7 +40,6 @@ export type EventList = Array<Event>
 export const EventContext = createContext<EventList>(null)
 
 const EventContextProvider = (props) => {
-    const [markerDetails, setMarkerDetails] = useState<Event>()
 
     const [events, setEvents] = useState<EventList>([
         {

@@ -1,27 +1,21 @@
 import * as React from "react";
 import { StyleSheet, Text, View, Image, ImageBackground, Dimensions } from 'react-native';
-
+import { Event } from '../../context/EventContext'
 const { height, width } = Dimensions.get('window');
 
-type EventDetailsProps = {
-    id: number,
-    title: string
-    img?: string
-    body?: string
-}
 
-export const EventDetails: React.FC<EventDetailsProps> =
-    ({ title, img, body }) => (
+export const MarkerDetails: React.FC<Event> =
+    ({ title }) => (
         <View style={styles.container} >
 
-            {img &&
+            {/* {img &&
                 <ImageBackground
                     source={{ uri: img }}
                     style={styles.coverImage}>
                     <Text style={styles.insideText}>{title}</Text>
                 </ImageBackground>
-            }
-            <Text style={styles.bodyText} >{body}</Text>
+            } */}
+            <Text style={styles.bodyText} >{title}</Text>
         </View>
     )
 
