@@ -1,74 +1,35 @@
 import React, { useState, createContext } from 'react'
-import { LatLng } from 'react-native-maps';
+import { EventLib } from '../index'
 
-export interface Event {
-    id: number,
-    category: string,
-    // coordinates: LatLng,
+
+
+const event1: EventLib.Event = {
+    id: 1,
     geometry: {
-        coordinates: Array<number | number>,
+        type: "Point",
+        coordinates: [-121.3, 37.423]
     },
-    title: string,
-    body?: string,
-    img?: string,
-    property?: any
 
+    title: 'test',
+    category: 'test'
 }
-// interface Event extends Partial<GeoJSON.Point> {
-//     type: any,
-//     coordinates: Array<number>,
-//     id: number,
-//     category: string,
-//     ///coordinates: LatLng,
-//     // geometry: {
-//     //     coordinates: Array<number | number>,
-//     // },
-//     title: string,
-//     body?: string,
-//     img?: string,
-// }
-// export type EventList = {
-//     events: Array<Event>,
-//     //events: GeoJSON.Feature<Event>,
-
-// }
-// export type EventList = GeoJSON.Feature<Event>
+const event2: EventLib.Event = {
+    id: 1,
+    geometry: {
+        type: "Point",
+        coordinates: [-121.2, 37.421]
+    },
+    title: 'test',
+    category: 'test',
+}
 
 
-export type EventList = Array<Event>
-
-export const EventContext = createContext<EventList>(null)
+export const EventContext = createContext<EventLib.EventList>(null)
 
 const EventContextProvider = (props) => {
 
-    const [events, setEvents] = useState<EventList>([
-        {
-            id: 1,
-            // coordinates: {
-            //     latitude: 37.421,
-            //     longitude: -121.0,
-            // }
-            geometry: {
-                coordinates: [-121.0, 37.421],
-            }
-            ,
-            title: 'My first event',
-            category: 'Social',
-        },
-        {
-            id: 2,
-            geometry: {
-                coordinates: [-121.3, 37.423],
-            }
-            // coordinates: {
-            //     latitude: 37.423,
-            //     longitude: -121.3,
-
-            // }
-            , title: 'Another event',
-            category: 'Market',
-        },
-    ])
+    const [events, setEvents] = useState<EventLib.EventList>([
+        event1, event2])
     return (
         <EventContext.Provider value={events}>
             {props.children}

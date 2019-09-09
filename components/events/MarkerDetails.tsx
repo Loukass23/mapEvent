@@ -1,11 +1,11 @@
 import * as React from "react";
 import { StyleSheet, Text, View, Image, ImageBackground, Dimensions } from 'react-native';
-import { Event } from '../../context/EventContext'
+import { EventLib } from '../../index'
 const { height, width } = Dimensions.get('window');
 
 
-export const MarkerDetails: React.FC<Event> =
-    ({ title }) => (
+export const MarkerDetails: React.FC<EventLib.Event> =
+    (marker: EventLib.Event) => (
         <View style={styles.container} >
 
             {/* {img &&
@@ -15,7 +15,7 @@ export const MarkerDetails: React.FC<Event> =
                     <Text style={styles.insideText}>{title}</Text>
                 </ImageBackground>
             } */}
-            <Text style={styles.bodyText} >{title}</Text>
+            <Text style={styles.bodyText} >{marker.title}</Text>
         </View>
     )
 

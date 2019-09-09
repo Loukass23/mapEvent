@@ -2,14 +2,12 @@ import React, { useState, createContext } from 'react'
 import { Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import { LocationLib } from '..';
 
 
-export type LocationContext = {
-    userRegion: Region,
-    _getLocationAsync(): void,
-};
 
-export const LocationContext = createContext<LocationContext>(
+
+export const LocationContext = createContext<LocationLib.UserLocation>(
     {
         userRegion:
         {

@@ -1,7 +1,8 @@
 import { Dimensions } from 'react-native';
 import supercluster from 'supercluster';
 import { Region } from 'react-native-maps';
-import { EventContext, EventList } from '../../context/EventContext';
+import { EventLib } from '../../index';
+import { Feature, Point } from 'geojson';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -17,7 +18,7 @@ export const getRegion = (latitude: number, longitude: number, latitudeDelta: nu
     };
 }
 
-export const getCluster = (events: any, region: Region) => {
+export const getCluster = (events: EventLib.EventList, region: Region) => {
     const cluster = new supercluster({
         radius: 50,
         maxZoom: 16,
