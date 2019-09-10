@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-nativ
 import { EventLib } from '../../index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
+import Colors from "../../constants/Colors";
 
 const { height, width } = Dimensions.get('window');
 
@@ -21,7 +22,12 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                     />
                 </View>
             }
-            <Text style={styles.bodyText} >{marker.title}</Text>
+
+            <Text style={styles.title}>
+                {marker.title}</Text>
+            <Text style={styles.text}>{marker.body}</Text>
+
+            <Text style={styles.bodyText} >{marker.category}</Text>
         </View>
     )
 
@@ -32,7 +38,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        paddingVertical: 5,
 
     },
     insideText: {
@@ -58,7 +65,18 @@ const styles = StyleSheet.create({
         left: 0,
 
 
-    }
+    },
+    title: {
+        fontSize: 20,
+        color: Colors.primary,
+        lineHeight: 24,
+        textAlign: 'center',
+    },
+    text: {
+        fontSize: 15,
+        lineHeight: 20,
+        textAlign: 'center',
+    },
 })
 // import React from 'react'
 // import {

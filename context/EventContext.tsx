@@ -10,8 +10,9 @@ const event1: EventLib.Event = {
         coordinates: [-121.3, 37.423]
     },
 
-    title: 'test',
-    category: 'test',
+    title: 'Come Meet Us',
+    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quam ipsum, porttitor sed molestie eget, molestie sed eros. Aliquam euismod mauris sit amet neque lobortis aliquet.',
+    category: 'Meet',
     img: 'https://res.cloudinary.com/ds3w3iwbk/image/upload/v1560349630/MERN/20170409_193026.jpg'
 }
 const event2: EventLib.Event = {

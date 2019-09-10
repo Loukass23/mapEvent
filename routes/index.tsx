@@ -1,9 +1,10 @@
+import React from 'react'
 import { createAppContainer } from "react-navigation";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import MapScreen from "../screens/MapScreen";
 import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
-
+import MenuDrawer from '../components/navigation/MenuDrawer'
 
 export enum ROUTES {
     RootMain = "RootMain",
@@ -17,8 +18,12 @@ const { width, height } = Dimensions.get('window');
 
 const DrawerConfig = {
     drawerWidth: width * 0.83,
-
+    // contentComponent: ({ navigation }) => {
+    //     return (<MenuDrawer navigation={navigation} />)
+    // }
 }
+
+
 const AppDrawerNavigator = createDrawerNavigator({
     Map: {
         screen: MapScreen,

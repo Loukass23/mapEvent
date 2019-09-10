@@ -1,5 +1,5 @@
 export const markerImages = {
-    Market: require('../assets/images/Marker1.png'),
+    Meet: require('../assets/images/Marker1.png'),
     Road: require('../assets/images/Marker2.png'),
     Vandalism: require('../assets/images/Marker3.png'),
     Traffic: require('../assets/images/Marker4.png'),

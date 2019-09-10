@@ -12,13 +12,14 @@ import { MarkerDetails } from '../components/events/MarkerDetails';
 import { pick } from 'lodash';
 import { Button, Icon } from 'react-native-elements';
 import MenuButton from '../components/navigation/MenuButton';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const { width, height } = Dimensions.get('window');
 interface Props {
     navigation: any
 }
 const MapScreen: FC<Props> = ({ navigation }) => {
-    console.log('propsnav', navigation)
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
     const events = useContext(EventContext)
 
@@ -36,6 +37,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
     const [region, setRegion] = useState<Region | undefined>(userRegion);
     console.log('userRegion :', userRegion);
     console.log('events :', events);
+    console.log('region', region)
 
     const [marker, setMarker] = useState<EventLib.Event | undefined>(null)
     useEffect(() => { console.log('myMarker :', marker) }, [marker]);
@@ -47,13 +49,20 @@ const MapScreen: FC<Props> = ({ navigation }) => {
         const key = index + marker.geometry.coordinates[0];
         // If a cluster
         if (marker.properties) {
+            const latitude = marker.geometry.coordinates[1]
+            const longitude = marker.geometry.coordinates[0]
+            const { longitudeDelta, latitudeDelta } = region
+            const longitudeDeltaZoom = longitudeDelta - 1
+            const latitudeDeltaZoom = latitudeDelta - 1
             return (
                 <Marker
+                    onPress={() => setRegion({ latitude, longitude, latitudeDelta: latitudeDeltaZoom, longitudeDelta: longitudeDeltaZoom })}
                     key={key}
                     coordinate={{
-                        latitude: marker.geometry.coordinates[1],
-                        longitude: marker.geometry.coordinates[0]
+                        latitude,
+                        longitude
                     }}
+
                 >
                     <ClusterMarker count={marker.properties.point_count} />
                 </Marker>
@@ -107,13 +116,29 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             </View>
         )
     else return (
-        <View style={styles.map}>
-            <Text>Hello</Text>
-            <Button
+        <View style={styles.eventDetails}>
+
+            <TouchableHighlight
+                onPress={() => setMarker(null)}
+                style={styles.backButton}
+            >
+                <Ionicons
+                    style={styles.backButton}
+                    name='md-arrow-back'
+                    color='grey'
+                    size={32}
+
+                />
+                {/* <Icon name="md-arrow-back"
+                    type='ionicons'
+                    color="grey" /> */}
+            </TouchableHighlight>
+
+            {/* <Button
                 title={'back'}
                 onPress={() => setMarker(null)}
-            />
-            <MarkerDetails {...pick(marker, 'id', 'title', 'category', 'geometry', 'img')} />
+            /> */}
+            <MarkerDetails {...pick(marker, 'id', 'title', 'category', 'body', 'geometry', 'img')} />
         </View>
     )
 
@@ -123,6 +148,10 @@ export default MapScreen
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
+    },
+    eventDetails: {
+        ...StyleSheet.absoluteFillObject,
+
     },
     makerTitle: {
         fontSize: 12,
@@ -135,17 +164,18 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         textAlign: 'center',
     },
-    menuButton: {
-        backgroundColor: 'rgba(250, 250, 250, .8)',
-        position: 'absolute',//use absolute position to show button on top of the map
-        top: 10, //for center align
+    backButton: {
         left: 10,
-        width: 40,
-        height: 40,
-        alignSelf: 'flex-start',
-        borderRadius: 3,
-        alignContent: 'center',
-        justifyContent: 'center'
+        // zIndex: 1,
+        // backgroundColor: 'black',
+        // position: 'absolute',//use absolute position to show button on top of the map
+        // top: 10, //for center align
+        // left: 10,
+        // width: 40,
+        height: 25,
+        // alignSelf: 'flex-start',
+        // borderRadius: 3,
+
 
     }
 })
