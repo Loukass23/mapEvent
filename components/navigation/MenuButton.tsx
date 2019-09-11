@@ -3,7 +3,6 @@ import { StyleSheet, TouchableHighlight } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements';
 const MenuButton = ({ navigation }) => {
-    console.log('props', navigation)
     return (
         // <Ionicons
         //     style={styles.menuIcon}

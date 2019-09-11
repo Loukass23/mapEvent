@@ -2,9 +2,11 @@ import React from 'react'
 import { createAppContainer } from "react-navigation";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import MapScreen from "../screens/MapScreen";
+
 import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import MenuDrawer from '../components/navigation/MenuDrawer'
+import EventScreen from '../screens/EventScreen';
 
 export enum ROUTES {
     RootMain = "RootMain",
@@ -31,6 +33,9 @@ const AppDrawerNavigator = createDrawerNavigator({
     Settings: {
         screen: SettingsScreen,
     },
+    Event: {
+        screen: EventScreen
+    }
 
 }, DrawerConfig)
 

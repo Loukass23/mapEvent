@@ -13,7 +13,10 @@
   },
   "dependencies": {
     "@testing-library/react-native": "^4.0.8",
+    "@types/react-navigation": "^3.0.8",
     "expo": "^34.0.1",
+    "expo-font": "^6.0.1",
+    "expo-image-picker": "^6.0.0",
     "jest": "^24.9.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",

@@ -19,3 +19,15 @@ export namespace LocationLib {
     };
 }
 
+export type ViewLayout = {
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+}
+
+export type ViewLayoutEvent = {
+    nativeEvent: {
+        layout: ViewLayout,
+    }
+}
