@@ -1,7 +1,7 @@
 import { Dimensions } from 'react-native';
 import supercluster from 'supercluster';
 import { Region } from 'react-native-maps';
-import { EventLib } from '../../index';
+import { EventLib } from '../../@types/index';
 import { Feature, Point } from 'geojson';
 
 const { width, height } = Dimensions.get('window');
@@ -25,7 +25,7 @@ export const getCluster = (events: EventLib.EventList, region: Region) => {
     });
 
     let markers = [];
-
+    console.log('loadevents', events)
     try {
         const padding = 0;
         cluster.load(events);

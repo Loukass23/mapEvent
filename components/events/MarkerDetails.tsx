@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-native';
-import { EventLib } from '../../index'
+import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
 import Colors from "../../constants/Colors";

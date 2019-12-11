@@ -6,7 +6,23 @@ export namespace EventLib {
         title: string,
         body?: string,
         img?: string,
-        properties?: Object<any>
+        creationDate?: Date
+        createdBy?: User,
+        comments?: Array<Comment>
+        type: any,
+        properties: Object<any>
+    }
+
+    interface Comment {
+        user: User,
+        message: string,
+        postedOn: Date,
+
+    }
+
+    export interface EventContextInterface {
+        events: EventList,
+        getAllEvents(): void,
     }
 
     export type EventList = Array<Event>
