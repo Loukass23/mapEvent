@@ -3,9 +3,45 @@ import { EventLib } from '../@types/index'
 import gql from 'graphql-tag';
 
 import { graphql, useQuery } from 'react-apollo';
-import { getAllEvents } from '../queries/queries';
+
+// var fetch = require('graphql-fetch')('https://sleepy-caverns-71410.herokuapp.com/graphql')
 
 
+const eventList = [
+    {
+        "id": "5de516da4f3ffc07a2301246",
+        "category": "Test",
+        "title": "Dropped Collection, weil, ging nicht",
+        "geometry": {
+            "coordinates": [
+                45.943,
+                -29.43
+            ]
+        }
+    },
+    {
+        "id": "5de519e8adbd9b088e615339",
+        "category": "Test",
+        "title": "Now it might work...",
+        "geometry": {
+            "coordinates": [
+                31.943,
+                35.43
+            ]
+        }
+    },
+    {
+        "id": "5de51a82251ce808cb5fb33e",
+        "category": "Test",
+        "title": "Still working, I hope...",
+        "geometry": {
+            "coordinates": [
+                30.943,
+                36.1345323
+            ]
+        }
+    }
+]
 
 
 
@@ -48,85 +84,100 @@ export const EventContext = createContext<EventLib.EventContextInterface>(initEv
 const EventContextProvider = (props: { children: React.ReactNode; }) => {
 
     const [events, setEvents] = useState<EventLib.EventList>([])
-    const GET_EVENTS = gql`
-            query{
-                events {
-                    id,
-                    geometry {
-                        type,
-                        coordinates
-                            },
-                    properties,
-                    type,
-                    title,
-                    category,
-                    img
-                    }
-                }
-                    `
 
-    const { loading, error, data } = useQuery(GET_EVENTS);
 
-    if (loading) return null;
-    if (error) return `Error! ${error}`;
-    console.log('loading :', loading);
-    console.log('data :', data);
-    if (data) {
-        const { events } = data
-        setEvents(events)
-        // return events
-        console.log('eventsContext :', events);
-    }
+
+    // const GET_EVENTS = gql`
+    //         query{
+    //             events {
+    //                 id,
+    //                 geometry {
+    //                     type,
+    //                     coordinates
+    //                         },
+    //                 properties,
+    //                 type,
+    //                 title,
+    //                 category,
+    //                 img
+    //                 }
+    //             }
+    //                 `
+
+    // const { loading, error, data } = useQuery(GET_EVENTS);
+
+    // if (loading) return null;
+    // if (error) return `Error! ${error}`;
+    // console.log('loading :', loading);
+    // console.log('data :', data);
+    // if (data) {
+    //     const { events } = data
+    //     setEvents(events)
+    //     // return events
+    //     console.log('eventsContext :', events);
+    // }
 
 
 
 
     const getAllEvents = () => {
         console.log('getAllEvents');
-        const GET_EVENTS = gql`
-            query{
+
+        const query = `
+            {
                 events {
-                    id,
-                    geometry {
-                        type,
-                        coordinates
-                            },
-                    properties,
-                    type,
-                    title,
-                    category,
-                    img
-                    }
+        id,
+        category,
+        title,
+        geometry { 
+            coordinates
+            }
+    }
                 }
                     `
-        const GET_EVENTS2 = gql`
-            
-        query{
-            events {
-                id,
-                    category,
-                    title,
-                    geometry {
-                    coordinates
-                }
-            }
 
-        }
-            `
+        const options = {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                query
+            })
+        };
 
-        const { loading, error, data } = useQuery(GET_EVENTS2);
+        fetch(`https://sleepy-caverns-71410.herokuapp.com/graphql`, options)
+            .then(res => res.json())
+            .then(data => {
+                const { events } = data.data
+                console.log('events :', data);
+                const mapEvents = events.map(event => {
+                    return {
+                        ...event,
+                        properties: "",
+                        type: "Test",
+                        category: 'Meet',
 
-        if (loading) return null;
-        if (error) return `Error! ${error}`;
-        console.log('loading :', loading);
-        console.log('data :', data);
-        if (data) {
-            const { events } = data
-            setEvents(events)
-            // return events
-            console.log('eventsContext :', events);
-        }
+                    }
+                })
+                // console.log('mapEvents :', mapEvents);
+                setEvents(mapEvents);
+            })
     }
+
+    //     const { loading, error, data } = useQuery(GET_EVENTS);
+
+    //     if (loading) return null;
+    //     if (error) return `Error! ${error}`;
+    //     console.log('loading :', loading);
+    //     console.log('data :', data);
+    //     if (data) {
+    //         const { events } = data
+    //         setEvents(events)
+    //         // return events
+    //         console.log('eventsContext :', events);
+    //     }
+    // }
 
     return (
         <EventContext.Provider value={{ events, getAllEvents }}>
@@ -134,6 +185,4 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
         </EventContext.Provider>
     )
 }
-export default graphql(getAllEvents)(EventContextProvider)
-
-// export default EventContextProvider
+export default EventContextProvider

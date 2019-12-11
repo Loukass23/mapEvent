@@ -18,31 +18,34 @@ import {
     NavigationScreenProp,
     NavigationState,
 } from 'react-navigation';
+import ApolloClient from 'apollo-client';
+
 
 
 
 interface Props {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    client: ApolloClient<object>
+
 }
 
 
-
-
 const { width, height } = Dimensions.get('window');
-// interface Props {
-//     navigation: Navigation
-// }
+
+
 const MapScreen: FC<Props> = ({ navigation }) => {
 
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
     const { events, getAllEvents } = useContext(EventContext)
+    console.log('events :', events);
+
+    useEffect(() => {
+        getAllEvents()
+
+    }, [])
+
 
     const { } = navigation;
-
-
-    if (events.length === 0) getAllEvents()
-
-
 
 
     const [hackHeight, setHackHeight] = useState<number | undefined>(height);
@@ -52,9 +55,6 @@ const MapScreen: FC<Props> = ({ navigation }) => {
     }
 
     const [region, setRegion] = useState<Region | undefined>(userRegion);
-    // console.log('userRegion :', userRegion);
-    // console.log('events :', events);
-    // console.log('region', region)
 
     const [marker, setMarker] = useState<EventLib.Event | undefined>(null)
     useEffect(() => { console.log('myMarker :', marker) }, [marker]);
@@ -68,9 +68,6 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
     const cluster = getCluster(events, region);
 
-
-
-
     const renderPoi = () => (
 
         <Marker coordinate={poi.coordinate}
@@ -82,7 +79,6 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                 <View style={styles.flexAlign}>
                     <Text>Add Event</Text>
                     <Ionicons
-
                         name='md-add'
                         color='grey'
                         size={32}
@@ -97,7 +93,9 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
 
     const renderMarker = (marker: EventLib.Event, index: number) => {
-        const key = index + marker.geometry.coordinates[0];
+        console.log('marker :', marker);
+        const key = marker.id
+        // const key = index + marker.geometry.coordinates[0];
         // If a cluster
         if (marker.properties) {
             const latitude = marker.geometry.coordinates[1]
@@ -135,10 +133,8 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                 title={marker.category}
                 description={marker.body}
             >
-
                 <Callout
-                    onPress={() => setMarker(marker)}
-                >
+                    onPress={() => setMarker(marker)} >
                     <View >
                         <Text style={styles.makerTitle}>
                             {marker.category}</Text>
@@ -148,6 +144,8 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             </Marker>
         );
     };
+
+
     if (marker == null)
         return (
             <View style={{ paddingBottom: hackHeight }}>
@@ -160,8 +158,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                     region={region}
                     onRegionChangeComplete={region => setRegion(region)}
                     onLongPress={(e) => setPoi(e.nativeEvent)}
-                    onPress={() => setPoi(null)}
-                >
+                    onPress={() => setPoi(null)}               >
                     {cluster.markers.map((marker, index) => renderMarker(marker, index))}
                     {poi && renderPoi()}
                 </MapView>
