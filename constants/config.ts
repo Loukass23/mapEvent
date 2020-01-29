@@ -1,0 +1,1 @@
+export const googleAPIkey = 'AIzaSyBevoLECtvnmh8YBsVJ5Ep9FAk-bui-0j4'

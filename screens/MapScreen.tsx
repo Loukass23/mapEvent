@@ -36,13 +36,15 @@ const { width, height } = Dimensions.get('window');
 const MapScreen: FC<Props> = ({ navigation }) => {
 
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
-    const { events, getAllEvents } = useContext(EventContext)
-    console.log('events :', events);
+    const { events, getAllEvents, loading, addEvent } = useContext(EventContext)
+
 
     useEffect(() => {
         getAllEvents()
 
+
     }, [])
+
 
 
     const { } = navigation;
@@ -68,12 +70,27 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
     const cluster = getCluster(events, region);
 
+    const onAddEventPress = () => {
+        console.log('<<<<<<<<<<<<<marker :', poi);
+        //navigation.navigate('Event')
+        const { latitude, longitude } = poi.coordinate
+        setMarker({
+            geometry: { coordinates: [latitude, longitude], type: 'Point' },
+            id: null,
+            category: '',
+            title: '',
+            type: '',
+            properties: {}
+        })
+        console.log('marker<<<<<<<<<<<<<<<<<', marker)
+    }
+
     const renderPoi = () => (
 
         <Marker coordinate={poi.coordinate}
         >
             <Callout
-                onPress={() => navigation.navigate('Event')}
+                onPress={() => onAddEventPress()}
             // onPress={() => this.poiClick(poi)}
             >
                 <View style={styles.flexAlign}>
@@ -162,7 +179,9 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                     {cluster.markers.map((marker, index) => renderMarker(marker, index))}
                     {poi && renderPoi()}
                 </MapView>
-
+                {loading && <View style={styles.loading}>
+                    <Text>Loading Events</Text>
+                </View>}
                 <MenuButton navigation={navigation} />
             </View>
         )
@@ -189,7 +208,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                 title={'back'}
                 onPress={() => setMarker(null)}
             /> */}
-            <MarkerDetails {...pick(marker, 'properties', 'type', 'id', 'title', 'category', 'body', 'geometry', 'img')} />
+            <MarkerDetails {...pick(marker, 'properties', 'type', 'id', 'title', 'category', 'body', 'geometry', 'img', 'address')} />
         </View>
     )
 
@@ -204,6 +223,11 @@ const styles = StyleSheet.create({
     eventDetails: {
         ...StyleSheet.absoluteFillObject,
 
+    },
+    loading: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center'
     },
     makerTitle: {
         fontSize: 12,
