@@ -13,3 +13,4 @@ web-report/
 # Jest
 #
 .jest/
+constants/config.ts
