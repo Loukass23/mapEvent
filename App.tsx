@@ -13,11 +13,11 @@ import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from 'react-apollo';
 
-const link = new HttpLink({ uri: 'https://sleepy-caverns-71410.herokuapp.com/graphql' });
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link,
-});
+// const link = new HttpLink({ uri: 'http://localhost:5000/graphq' });
+// const client = new ApolloClient({
+//   cache: new InMemoryCache(),
+//   link,
+// });
 
 
 
@@ -53,14 +53,14 @@ const App: FC = () => {
   else
     return (
       <View style={styles.container}>
-        <ApolloProvider client={client}>
-          <StatusBar backgroundColor="blue" hidden={true} barStyle="dark-content" />
-          <LocationContextProvider>
-            <EventContextProvider>
-              <AppContainer />
-            </EventContextProvider>
-          </LocationContextProvider>
-        </ApolloProvider>
+        {/* <ApolloProvider client={client}> */}
+        <StatusBar backgroundColor="blue" hidden={true} barStyle="dark-content" />
+        <LocationContextProvider>
+          <EventContextProvider>
+            <AppContainer />
+          </EventContextProvider>
+        </LocationContextProvider>
+        {/* </ApolloProvider> */}
       </View>
     );
 }

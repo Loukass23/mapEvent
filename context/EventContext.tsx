@@ -1,7 +1,6 @@
 import React, { useState, createContext } from 'react'
 import { EventLib } from '../@types/index'
 import gql from 'graphql-tag';
-
 import { graphql, useQuery } from 'react-apollo';
 
 // var fetch = require('graphql-fetch')('https://sleepy-caverns-71410.herokuapp.com/graphql')
@@ -76,6 +75,11 @@ const initEvents: EventLib.EventContextInterface = {
     getAllEvents: () => {
         throw new Error('getAllEvents() not implemented');
     },
+    addEvent: () => {
+        throw new Error('addEvent() not implemented');
+    },
+    loading: false,
+    newEvent: null
 }
 
 export const EventContext = createContext<EventLib.EventContextInterface>(initEvents)
@@ -84,8 +88,9 @@ export const EventContext = createContext<EventLib.EventContextInterface>(initEv
 const EventContextProvider = (props: { children: React.ReactNode; }) => {
 
     const [events, setEvents] = useState<EventLib.EventList>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
-
+    const [newEvent, setNewEvent] = useState<EventLib.Event>()
 
     // const GET_EVENTS = gql`
     //         query{
@@ -117,24 +122,28 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
     //     console.log('eventsContext :', events);
     // }
 
+    const addEvent = () => {
 
+    }
 
 
     const getAllEvents = () => {
-        console.log('getAllEvents');
 
         const query = `
-            {
-                events {
-        id,
-        category,
-        title,
-        geometry { 
-            coordinates
-            }
-    }
+        {
+            events {
+                id,
+                category,
+                title,
+                type,
+                createdBy {
+                    id,
+                    username},
+                geometry { 
+                    coordinates
+                    }
                 }
-                    `
+        } `
 
         const options = {
             method: "post",
@@ -146,21 +155,21 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
             })
         };
 
-        fetch(`https://sleepy-caverns-71410.herokuapp.com/graphql`, options)
+
+        setLoading(true)
+        fetch(`https://map-event.herokuapp.com/graphql`, options)
             .then(res => res.json())
             .then(data => {
                 const { events } = data.data
-                console.log('events :', data);
+
                 const mapEvents = events.map(event => {
                     return {
                         ...event,
                         properties: "",
-                        type: "Test",
-                        category: 'Meet',
-
                     }
                 })
                 // console.log('mapEvents :', mapEvents);
+                setLoading(false)
                 setEvents(mapEvents);
             })
     }
@@ -180,7 +189,7 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
     // }
 
     return (
-        <EventContext.Provider value={{ events, getAllEvents }}>
+        <EventContext.Provider value={{ events, getAllEvents, loading, newEvent, addEvent }}>
             {props.children}
         </EventContext.Provider>
     )
