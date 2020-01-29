@@ -7,6 +7,18 @@ import { Ionicons } from '@expo/vector-icons';
 import LocationContextProvider from './context/LocationContext'
 import EventContextProvider from './context/EventContext'
 import AppContainer from './routes';
+import { AppRegistry } from 'react-native';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { HttpLink } from 'apollo-link-http';
+import { ApolloProvider } from 'react-apollo';
+
+// const link = new HttpLink({ uri: 'http://localhost:5000/graphq' });
+// const client = new ApolloClient({
+//   cache: new InMemoryCache(),
+//   link,
+// });
+
 
 
 
@@ -41,15 +53,20 @@ const App: FC = () => {
   else
     return (
       <View style={styles.container}>
+        {/* <ApolloProvider client={client}> */}
         <StatusBar backgroundColor="blue" hidden={true} barStyle="dark-content" />
         <LocationContextProvider>
           <EventContextProvider>
             <AppContainer />
           </EventContextProvider>
         </LocationContextProvider>
+        {/* </ApolloProvider> */}
       </View>
     );
 }
+
+AppRegistry.registerComponent('MapEvent', () => App);
+
 export default App
 
 
@@ -62,3 +79,5 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
 });
+
+

@@ -2,7 +2,9 @@ import React, { useState, createContext } from 'react'
 import { Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import { LocationLib } from '..';
+import { LocationLib, EventAddress } from '../@types';
+import { googleAPIkey } from '../constants/config'
+
 
 
 
@@ -16,8 +18,12 @@ export const LocationContext = createContext<LocationLib.UserLocation>(
             latitudeDelta: 0,
             longitudeDelta: 0
         },
+        eventAddress: null,
         _getLocationAsync: () => {
             throw new Error('_getLocationAsync() not implemented');
+        },
+        getAddress: () => {
+            throw new Error('getAddress() not implemented');
         }
     }
 )
@@ -29,6 +35,8 @@ const LocationContextProvider = (props) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     })
+
+    const [eventAddress, setEventAddress] = useState<EventAddress>()
 
     const _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -45,8 +53,23 @@ const LocationContextProvider = (props) => {
         })
     };
 
+    const getAddress = (latitude, longitude) => {
+
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + latitude + ',' + longitude + '&key=' + googleAPIkey)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                const array = responseJson.results[0].address_components
+                const address = {
+                    formatted: responseJson.results[0].formatted_address,
+                    city: array[array.length - 3].short_name,
+                    country: array[array.length - 2].short_name
+                }
+                setEventAddress(address)
+
+            })
+    }
     return (
-        <LocationContext.Provider value={{ userRegion, _getLocationAsync }}>
+        <LocationContext.Provider value={{ userRegion, _getLocationAsync, getAddress, eventAddress }}>
             {props.children}
         </LocationContext.Provider>
     )

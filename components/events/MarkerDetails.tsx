@@ -1,37 +1,147 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-native';
-import { EventLib } from '../../index'
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight } from 'react-native';
+import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
 import Colors from "../../constants/Colors";
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker'
+import { LocationContext } from "../../context/LocationContext";
+import { useContext } from "react";
+
+
 
 const { height, width } = Dimensions.get('window');
 
 
 
 export const MarkerDetails: React.FC<EventLib.Event> =
-    (marker: EventLib.Event) => (
-        <View style={styles.container} >
+    (marker: EventLib.Event) => {
+        const [uri, setUri] = React.useState<string>(marker.img)
 
-            {marker.img &&
-                <View>
-                    <Image
-                        source={{ uri: marker.img }}
-                        style={styles.coverImage}
-                        PlaceholderContent={<ActivityIndicator />}
-                    />
-                </View>
+        const { getAddress, eventAddress } = useContext(LocationContext)
+
+        React.useEffect(() => {
+            getAddress(marker.geometry.coordinates[0], marker.geometry.coordinates[1])
+
+
+        }, [])
+
+        const onChooseImagePress = async () => {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1
+            });
+            if (!result.cancelled) {
+                console.log(result);
+
+                imageUpload(result)
+            }
+            // if (!result.cancelled) {
+            //     const foo: string = result.uri
+            //     this.handleUpload(foo.uri, 'test-image')
+            //         .then(() => {
+            //             Alert.alert("Success");
+            //         })
+            //         .catch((error) => {
+            //             Alert.alert(error);
+            //         });
+            // }
+        }
+
+        const onChooseCameraPress = async () => {
+            let result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1
+            });
+
+            if (!result.cancelled) {
+                console.log(result);
+
+                imageUpload(result)
+                //     .then(() => {
+                //         Alert.alert("Success");
+                //     })
+                //     .catch((error) => {
+                //         Alert.alert(error);
+
+                //     });
             }
 
-            <Text style={styles.title}>
-                {marker.title}</Text>
-            <Text style={styles.text}>{marker.body}</Text>
+        }
+        const imageUpload = async (result: any) => {
+            const { uri } = result
+            setUri(uri)
+            console.log('uri :', uri);
+            const response = await fetch(result.uri);
+            const blob = await response.blob();
+            console.log('blob :', blob);
+        }
 
-            <Text style={styles.bodyText} >{marker.category}</Text>
-        </View>
-    )
 
+        return (
+            <View style={styles.container} >
 
+                {uri ?
+                    <View>
+                        <Image
+                            source={{ uri }}
+                            style={styles.coverImage}
+                            PlaceholderContent={<ActivityIndicator />}
+                        />
+                    </View> :
+                    <View style={styles.photoIcons}>
+                        <TouchableHighlight
+                            onPress={onChooseImagePress}
+                            style={styles.icon}
+                        >
+                            <Ionicons
+
+                                name='md-image'
+                                color='grey'
+                                size={64}
+
+                            />
+                            {/* <Icon name="md-arrow-back"
+                    type='ionicons'
+                    color="grey" /> */}
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            style={styles.icon}
+                            onPress={onChooseCameraPress}
+                        >
+                            <Ionicons
+                                name='md-camera'
+                                color='grey'
+                                size={64}
+
+                            />
+                            {/* <Icon name="md-arrow-back"
+                    type='ionicons'
+                    color="grey" /> */}
+                        </TouchableHighlight>
+                    </View>
+                }
+
+                {eventAddress &&
+                    <Text style={styles.title}>
+                        {eventAddress.formatted}</Text>
+
+                }
+
+                <Text style={styles.title}>
+                    {marker.title}</Text>
+                <Text style={styles.text}>{marker.body}</Text>
+
+                <Text style={styles.bodyText} >{marker.category}</Text>
+            </View>
+        )
+
+    }
 const styles = StyleSheet.create({
     container: {
         marginTop: 5,
@@ -56,6 +166,13 @@ const styles = StyleSheet.create({
 
 
     },
+    photoIcons: {
+
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        alignContent: 'stretch'
+    },
     coverImage: {
         resizeMode: 'center',
         height: 400,
@@ -65,6 +182,13 @@ const styles = StyleSheet.create({
         left: 0,
 
 
+    },
+    icon: {
+        flex: 1,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center'
     },
     title: {
         fontSize: 20,
