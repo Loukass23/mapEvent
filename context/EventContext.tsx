@@ -1,7 +1,10 @@
-import React, { useState, createContext } from 'react'
-import { EventLib } from '../@types/index'
+import React, { useState, createContext, useContext } from 'react'
+import { EventLib, LocationLib } from '../@types/index'
 import gql from 'graphql-tag';
 import { graphql, useQuery } from 'react-apollo';
+import { queryAllEvents, queryEventsByRadius } from './eventQueries';
+import { LocationContext } from './LocationContext';
+import { serverURL } from '../constants/config';
 
 // var fetch = require('graphql-fetch')('https://sleepy-caverns-71410.herokuapp.com/graphql')
 
@@ -75,8 +78,8 @@ const initEvents: EventLib.EventContextInterface = {
     getAllEvents: () => {
         throw new Error('getAllEvents() not implemented');
     },
-    addEvent: () => {
-        throw new Error('addEvent() not implemented');
+    getEventsByRadius: () => {
+        throw new Error('queryEventsByRadius() not implemented');
     },
     loading: false,
     newEvent: null
@@ -85,66 +88,15 @@ const initEvents: EventLib.EventContextInterface = {
 export const EventContext = createContext<EventLib.EventContextInterface>(initEvents)
 
 
-const EventContextProvider = (props: { children: React.ReactNode; }) => {
 
+const EventContextProvider = (props: { children: React.ReactNode; }) => {
+    const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
     const [events, setEvents] = useState<EventLib.EventList>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const [newEvent, setNewEvent] = useState<EventLib.Event>()
 
-    // const GET_EVENTS = gql`
-    //         query{
-    //             events {
-    //                 id,
-    //                 geometry {
-    //                     type,
-    //                     coordinates
-    //                         },
-    //                 properties,
-    //                 type,
-    //                 title,
-    //                 category,
-    //                 img
-    //                 }
-    //             }
-    //                 `
-
-    // const { loading, error, data } = useQuery(GET_EVENTS);
-
-    // if (loading) return null;
-    // if (error) return `Error! ${error}`;
-    // console.log('loading :', loading);
-    // console.log('data :', data);
-    // if (data) {
-    //     const { events } = data
-    //     setEvents(events)
-    //     // return events
-    //     console.log('eventsContext :', events);
-    // }
-
-    const addEvent = () => {
-
-    }
-
-
-    const getAllEvents = () => {
-
-        const query = `
-        {
-            events {
-                id,
-                category,
-                title,
-                type,
-                createdBy {
-                    id,
-                    username},
-                geometry { 
-                    coordinates
-                    }
-                }
-        } `
-
+    const fetchEvents = async (query: string) => {
         const options = {
             method: "post",
             headers: {
@@ -154,24 +106,76 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
                 query
             })
         };
-
-
         setLoading(true)
-        fetch(`https://map-event.herokuapp.com/graphql`, options)
-            .then(res => res.json())
-            .then(data => {
-                const { events } = data.data
 
-                const mapEvents = events.map(event => {
-                    return {
-                        ...event,
-                        properties: "",
-                    }
-                })
-                // console.log('mapEvents :', mapEvents);
-                setLoading(false)
-                setEvents(mapEvents);
-            })
+        const res = await fetch(serverURL, options)
+        const data = await res.json()
+
+        console.log('data :', data);
+        if (data.error) console.log('data.error :', data.error);
+        // else if (data.events) {
+        //     console.log('data :', data);
+        //     const { events } = data.data
+
+        //     const mapEvents = events.map(event => {
+        //         return {
+        //             ...event,
+        //             properties: "",
+        //         }
+
+        //     })
+        //     // console.log('mapEvents :', mapEvents);
+        //     setLoading(false)
+        //     setEvents(mapEvents);
+        // }
+        else {
+            return data.data
+            const { eventsInRadius } = data.data
+
+        }
+
+    }
+
+    const getEventsByRadius = async () => {
+        console.log('user :', userRegion);
+        const { latitude, longitude } = userRegion
+        const query = queryEventsByRadius(1000000, longitude, latitude, "Meet")
+        const data = await fetchEvents(query)
+
+        setLoading(false)
+        const { eventsInRadius } = data
+        setEvents(eventsInRadius);
+        console.log('eventsInRadius :', eventsInRadius);
+    }
+
+
+    const getAllEvents = async () => {
+
+        const query = queryAllEvents()
+        const data = await fetchEvents(query)
+
+        setLoading(false)
+        const { events } = data
+        console.log('events :', events);
+        setEvents(events);
+
+        //         const mapEvents = events.map(event => {
+        //             return {
+        //                 ...event,
+        //                 properties: "",
+        //             }
+
+        //         })
+        //         // console.log('mapEvents :', mapEvents);
+        //         setLoading(false)
+        //         setEvents(mapEvents);
+        //     }
+        //     else if (data.eventsInRadius) {
+        //         const { eventsInRadius } = data.data
+        //         setLoading(false)
+        //         setEvents(eventsInRadius);
+        //     }
+        // })
     }
 
     //     const { loading, error, data } = useQuery(GET_EVENTS);
@@ -189,7 +193,7 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
     // }
 
     return (
-        <EventContext.Provider value={{ events, getAllEvents, loading, newEvent, addEvent }}>
+        <EventContext.Provider value={{ events, getAllEvents, loading, newEvent, getEventsByRadius }}>
             {props.children}
         </EventContext.Provider>
     )

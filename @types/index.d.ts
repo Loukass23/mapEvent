@@ -26,7 +26,7 @@ export namespace EventLib {
         getAllEvents(): void,
         loading: boolean,
         newEvent: Event,
-        addEvent(): void
+        getEventsByRadius(): void
     }
 
     export type EventList = Array<Event>

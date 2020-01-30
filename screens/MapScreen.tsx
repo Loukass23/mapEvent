@@ -36,14 +36,13 @@ const { width, height } = Dimensions.get('window');
 const MapScreen: FC<Props> = ({ navigation }) => {
 
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
-    const { events, getAllEvents, loading, addEvent } = useContext(EventContext)
+    const { events, getAllEvents, getEventsByRadius, loading } = useContext(EventContext)
 
 
     useEffect(() => {
-        getAllEvents()
-
-
-    }, [])
+        getEventsByRadius()
+        //getAllEvents()
+    }, [userRegion])
 
 
 
