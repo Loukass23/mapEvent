@@ -27,7 +27,7 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
     return (
 
         <View style={styles.container}>
-            <View style={styles.form}>
+            {!user ? <View style={styles.form}>
                 <Text>Email</Text>
                 <TextInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -53,7 +53,13 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
                     title="Log In"
                     color="#841584"
                 />
-            </View>
+            </View> :
+                <View style={styles.form}>
+                    <Text style={styles.text}>{user.username}</Text>
+                    <Text style={styles.text}>{user.email}</Text>
+                    <Text style={styles.text}>{user.firstName}  {user.lastName}</Text>
+                </View>
+            }
 
 
         </View>
@@ -74,6 +80,10 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 2,
+    },
+    text: {
+        textAlign: "center"
+
     },
     form: {
         paddingBottom: 10,

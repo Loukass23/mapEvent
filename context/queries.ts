@@ -1,5 +1,14 @@
 export const mutationLogIn = (email: string, pwd: string) => <string>`
-    mutation login { login(email: "${email}", password:"${pwd}") }
+    mutation login { login(email: "${email}", password:"${pwd}")
+  {
+         email
+         username,
+         lastName,
+         firstName,
+         token
+     
+     }
+}
         `
 
 export const queryAllEvents = () => <string>`

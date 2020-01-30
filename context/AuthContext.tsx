@@ -44,8 +44,8 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
         const data = await res.json()
 
         console.log('data :', data);
-        // if (data.error) console.log('data.error :', data.error);
-        // else return data.data
+        if (data.error) console.log('data.error :', data.error);
+        else setUser(data.data.login)
 
     }
 
