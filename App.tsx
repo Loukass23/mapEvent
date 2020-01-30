@@ -12,6 +12,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from 'react-apollo';
+import AuthContextProvider from './context/AuthContext';
 
 // const link = new HttpLink({ uri: 'http://localhost:5000/graphq' });
 // const client = new ApolloClient({
@@ -55,11 +56,13 @@ const App: FC = () => {
       <View style={styles.container}>
         {/* <ApolloProvider client={client}> */}
         <StatusBar backgroundColor="blue" hidden={true} barStyle="dark-content" />
-        <LocationContextProvider>
-          <EventContextProvider>
-            <AppContainer />
-          </EventContextProvider>
-        </LocationContextProvider>
+        <AuthContextProvider>
+          <LocationContextProvider>
+            <EventContextProvider>
+              <AppContainer />
+            </EventContextProvider>
+          </LocationContextProvider>
+        </AuthContextProvider>
         {/* </ApolloProvider> */}
       </View>
     );

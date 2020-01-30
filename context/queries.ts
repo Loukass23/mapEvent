@@ -1,3 +1,7 @@
+export const mutationLogIn = (email: string, pwd: string) => <string>`
+    mutation login { login(email: "${email}", password:"${pwd}") }
+        `
+
 export const queryAllEvents = () => <string>`
         {
             events {
@@ -5,6 +9,7 @@ export const queryAllEvents = () => <string>`
                 category,
                 title,
                 type,
+                img,
                 createdBy {
                     id,
                     username},
@@ -27,6 +32,7 @@ query eventsInRadius {
          )
         {
               id,
+              img,
         category,
         title,
         type,

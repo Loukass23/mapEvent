@@ -1,3 +1,22 @@
+
+export namespace UserLib {
+
+    export interface User {
+        email: string,
+        username: string,
+        firstName: string,
+        lastName: string,
+        token: string
+
+    }
+    export interface AuthContextInterface {
+        logIn(email: string, pwd: string): void,
+        user: User
+
+    }
+
+}
+
 export namespace EventLib {
     export interface Event {
         geometry: GeoJSON.Point,
@@ -26,7 +45,9 @@ export namespace EventLib {
         getAllEvents(): void,
         loading: boolean,
         newEvent: Event,
-        getEventsByRadius(): void
+        getEventsByRadius(): void,
+        handleSetRadius(radius: number): void,
+        radius: number
     }
 
     export type EventList = Array<Event>
@@ -41,11 +62,9 @@ export namespace LocationLib {
     };
 }
 export type EventAddress = {
-
     formatted: string,
     city: string,
     country: string
-
 }
 
 export type ViewLayout = {

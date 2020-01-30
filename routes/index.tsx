@@ -7,6 +7,7 @@ import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import MenuDrawer from '../components/navigation/MenuDrawer'
 import EventScreen from '../screens/EventScreen';
+import LogInScreen from '../screens/LogInScreen';
 
 export enum ROUTES {
     RootMain = "RootMain",
@@ -17,9 +18,8 @@ export enum ROUTES {
     MainDetails = "MainDetails"
 }
 const { width, height } = Dimensions.get('window');
-
 const DrawerConfig = {
-    drawerWidth: width * 0.83,
+    drawerWidth: width * 0.6,
     // contentComponent: ({ navigation }) => {
     //     return (<MenuDrawer navigation={navigation} />)
     // }
@@ -33,8 +33,8 @@ const AppDrawerNavigator = createDrawerNavigator({
     Settings: {
         screen: SettingsScreen,
     },
-    Event: {
-        screen: EventScreen
+    LogIn: {
+        screen: LogInScreen
     }
 
 }, DrawerConfig)

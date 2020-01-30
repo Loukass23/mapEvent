@@ -46,23 +46,35 @@ const LocationContextProvider = (props) => {
 
         let location = await Location.getCurrentPositionAsync({});
         const { latitude, longitude } = location.coords
-        setUserRegion({
+        const newUserRegion = {
             ...userRegion,
             latitude,
             longitude
-        })
+        }
+        setUserRegion(newUserRegion)
+        return newUserRegion
     };
 
-    const getAddress = (latitude, longitude) => {
+
+    const getAddress = (latitude: string, longitude: string) => {
 
         fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + latitude + ',' + longitude + '&key=' + googleAPIkey)
             .then((response) => response.json())
             .then((responseJson) => {
-                const array = responseJson.results[0].address_components
-                const address = {
-                    formatted: responseJson.results[0].formatted_address,
-                    city: array[array.length - 3].short_name,
-                    country: array[array.length - 2].short_name
+                // console.log('responseJson :', responseJson);
+                let address
+                if (responseJson.status === "ZERO_RESULTS") address = {
+                    formatted: "No address found",
+                    city: "",
+                    country: ""
+                }
+                else {
+                    const array = responseJson.results[0].address_components
+                    address = {
+                        formatted: responseJson.results[0].formatted_address,
+                        city: array[array.length - 3].short_name,
+                        country: array[array.length - 2].short_name
+                    }
                 }
                 setEventAddress(address)
 

@@ -22,9 +22,8 @@ export const MarkerDetails: React.FC<EventLib.Event> =
         const { getAddress, eventAddress } = useContext(LocationContext)
 
         React.useEffect(() => {
+            console.log('marker :', marker);
             getAddress(marker.geometry.coordinates[0], marker.geometry.coordinates[1])
-
-
         }, [])
 
         const onChooseImagePress = async () => {
@@ -126,15 +125,15 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                         </TouchableHighlight>
                     </View>
                 }
-
+                <Text style={styles.title}>
+                    {marker.title}</Text>
                 {eventAddress &&
-                    <Text style={styles.title}>
+                    <Text style={styles.address}>
                         {eventAddress.formatted}</Text>
 
                 }
 
-                <Text style={styles.title}>
-                    {marker.title}</Text>
+
                 <Text style={styles.text}>{marker.body}</Text>
 
                 <Text style={styles.bodyText} >{marker.category}</Text>
@@ -148,8 +147,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingVertical: 5,
+        justifyContent: 'space-evenly',
+        paddingVertical: 10,
 
     },
     insideText: {
@@ -193,6 +192,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         color: Colors.primary,
+        lineHeight: 24,
+        textAlign: 'center',
+    },
+    address: {
+        fontSize: 15,
+        color: Colors.secondary,
         lineHeight: 24,
         textAlign: 'center',
     },

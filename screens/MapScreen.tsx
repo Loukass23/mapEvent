@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, FC } from 'react'
 import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
-import MapView, { Region, Marker, Callout, MapEvent } from 'react-native-maps';
+import MapView, { Region, Marker, Callout, MapEvent, Circle } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
 import { EventContext, } from '../context/EventContext'
 import { EventLib, LocationLib, ViewLayoutEvent } from '../@types/index'
@@ -36,12 +36,13 @@ const { width, height } = Dimensions.get('window');
 const MapScreen: FC<Props> = ({ navigation }) => {
 
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
-    const { events, getAllEvents, getEventsByRadius, loading } = useContext(EventContext)
-
+    const { events, getAllEvents, getEventsByRadius, loading, radius } = useContext(EventContext)
+    const [region, setRegion] = useState<Region | undefined>(userRegion);
 
     useEffect(() => {
         getEventsByRadius()
-        //getAllEvents()
+        setRegion(userRegion)
+        // getAllEvents()
     }, [userRegion])
 
 
@@ -55,7 +56,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
         setTimeout(() => setHackHeight(height - 1), 1000);
     }
 
-    const [region, setRegion] = useState<Region | undefined>(userRegion);
+    console.log('events :', events);
 
     const [marker, setMarker] = useState<EventLib.Event | undefined>(null)
     useEffect(() => { console.log('myMarker :', marker) }, [marker]);
@@ -64,13 +65,12 @@ const MapScreen: FC<Props> = ({ navigation }) => {
     const [poi, setPoi] = useState<MapEvent | any>(null);
 
     useEffect(() => { _getLocationAsync() }, []);
-    useEffect(() => { setRegion(userRegion) }, [userRegion]);
+    //useEffect(() => { setRegion(userRegion) }, [userRegion]);
 
 
     const cluster = getCluster(events, region);
 
     const onAddEventPress = () => {
-        console.log('<<<<<<<<<<<<<marker :', poi);
         //navigation.navigate('Event')
         const { latitude, longitude } = poi.coordinate
         setMarker({
@@ -81,7 +81,6 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             type: '',
             properties: {}
         })
-        console.log('marker<<<<<<<<<<<<<<<<<', marker)
     }
 
     const renderPoi = () => (
@@ -109,7 +108,6 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
 
     const renderMarker = (marker: EventLib.Event, index: number) => {
-        console.log('marker :', marker);
         const key = marker.id
         // const key = index + marker.geometry.coordinates[0];
         // If a cluster
@@ -177,10 +175,21 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                     onPress={() => setPoi(null)}               >
                     {cluster.markers.map((marker, index) => renderMarker(marker, index))}
                     {poi && renderPoi()}
+                    {userRegion &&
+                        <Circle
+                            center={{
+                                latitude: userRegion.latitude,
+                                longitude: userRegion.longitude
+                            }}
+                            radius={radius}
+                            fillColor={Colors.radius}
+                        />
+                    }
                 </MapView>
                 {loading && <View style={styles.loading}>
                     <Text>Loading Events</Text>
                 </View>}
+
                 <MenuButton navigation={navigation} />
             </View>
         )

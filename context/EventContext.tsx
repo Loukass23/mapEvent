@@ -2,7 +2,7 @@ import React, { useState, createContext, useContext } from 'react'
 import { EventLib, LocationLib } from '../@types/index'
 import gql from 'graphql-tag';
 import { graphql, useQuery } from 'react-apollo';
-import { queryAllEvents, queryEventsByRadius } from './eventQueries';
+import { queryAllEvents, queryEventsByRadius } from './queries';
 import { LocationContext } from './LocationContext';
 import { serverURL } from '../constants/config';
 
@@ -82,7 +82,11 @@ const initEvents: EventLib.EventContextInterface = {
         throw new Error('queryEventsByRadius() not implemented');
     },
     loading: false,
-    newEvent: null
+    newEvent: null,
+    radius: 100,
+    handleSetRadius: () => {
+        throw new Error('handleSetRadius() not implemented');
+    },
 }
 
 export const EventContext = createContext<EventLib.EventContextInterface>(initEvents)
@@ -93,9 +97,14 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
     const [events, setEvents] = useState<EventLib.EventList>([])
     const [loading, setLoading] = useState<boolean>(false)
+    const [radius, setRadius] = useState<number>(100)
 
     const [newEvent, setNewEvent] = useState<EventLib.Event>()
 
+    const handleSetRadius = (radius: number) => {
+        setRadius(radius)
+        getEventsByRadius()
+    }
     const fetchEvents = async (query: string) => {
         const options = {
             method: "post",
@@ -113,39 +122,21 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
 
         console.log('data :', data);
         if (data.error) console.log('data.error :', data.error);
-        // else if (data.events) {
-        //     console.log('data :', data);
-        //     const { events } = data.data
-
-        //     const mapEvents = events.map(event => {
-        //         return {
-        //             ...event,
-        //             properties: "",
-        //         }
-
-        //     })
-        //     // console.log('mapEvents :', mapEvents);
-        //     setLoading(false)
-        //     setEvents(mapEvents);
-        // }
-        else {
-            return data.data
-            const { eventsInRadius } = data.data
-
-        }
+        else return data.data
 
     }
 
     const getEventsByRadius = async () => {
         console.log('user :', userRegion);
         const { latitude, longitude } = userRegion
-        const query = queryEventsByRadius(1000000, longitude, latitude, "Meet")
+        const query = queryEventsByRadius(radius, longitude, latitude, "Meet")
         const data = await fetchEvents(query)
 
         setLoading(false)
         const { eventsInRadius } = data
         setEvents(eventsInRadius);
-        console.log('eventsInRadius :', eventsInRadius);
+        // setEvents([...events, ...eventsInRadius]);
+
     }
 
 
@@ -193,7 +184,7 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
     // }
 
     return (
-        <EventContext.Provider value={{ events, getAllEvents, loading, newEvent, getEventsByRadius }}>
+        <EventContext.Provider value={{ events, getAllEvents, loading, newEvent, getEventsByRadius, radius, handleSetRadius }}>
             {props.children}
         </EventContext.Provider>
     )

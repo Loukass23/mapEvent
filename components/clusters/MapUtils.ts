@@ -25,7 +25,6 @@ export const getCluster = (events: EventLib.EventList, region: Region) => {
     });
 
     let markers = [];
-    console.log('loadevents', events)
     try {
         const padding = 0;
         cluster.load(events);
