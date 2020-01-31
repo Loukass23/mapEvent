@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button } from 'react-native';
 import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
@@ -8,6 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'
 import { LocationContext } from "../../context/LocationContext";
 import { useContext } from "react";
+import EventCategory from "./EventCategory";
+import { markerImages } from '../../constants/Markers'
+import { EventContext } from "../../context/EventContext";
 
 
 
@@ -16,13 +19,14 @@ const { height, width } = Dimensions.get('window');
 
 
 export const MarkerDetails: React.FC<EventLib.Event> =
-    (marker: EventLib.Event) => {
+    () => {
+        const { marker, handleSetMarker, handleEventCUD } = useContext(EventContext)
+
         const [uri, setUri] = React.useState<string>(marker.img)
 
         const { getAddress, eventAddress } = useContext(LocationContext)
 
         React.useEffect(() => {
-            console.log('marker :', marker);
             getAddress(marker.geometry.coordinates[0], marker.geometry.coordinates[1])
         }, [])
 
@@ -34,8 +38,6 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                 quality: 1
             });
             if (!result.cancelled) {
-                console.log(result);
-
                 imageUpload(result)
             }
             // if (!result.cancelled) {
@@ -81,6 +83,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
             console.log('blob :', blob);
         }
 
+        const { title, body, geometry, category, id } = marker
 
         return (
             <View style={styles.container} >
@@ -125,18 +128,54 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                         </TouchableHighlight>
                     </View>
                 }
-                <Text style={styles.title}>
-                    {marker.title}</Text>
-                {eventAddress &&
-                    <Text style={styles.address}>
-                        {eventAddress.formatted}</Text>
+                <View style={styles.formContainer} >
 
+                    <View style={styles.form}>
+                        {eventAddress ? <Text style={styles.address}>
+                            {eventAddress.formatted}</Text> :
+                            <Text>Loading Address</Text>}
+                        <Text style={styles.address}>
+                            lat:{geometry.coordinates[0].toFixed(2)}, long:{geometry.coordinates[1].toFixed(2)}</Text>
+                    </View>
+
+
+                    <View style={styles.form}>
+                        <Text>Title</Text>
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={title => handleSetMarker({ ...marker, title })}
+                            value={title}
+                        />
+                    </View>
+
+                    <View style={styles.form}>
+                        <Text>Description</Text>
+                        <TextInput
+                            style={{ height: 80, borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={body => handleSetMarker({ ...marker, body })}
+                            value={body}
+                        />
+                    </View>
+                    {category ?
+                        <Image
+                            source={markerImages[category]}
+                            style={{ width: 50, height: 50 }}
+                        /> :
+                        <EventCategory />}
+                </View>
+                {id ? <Button
+                    onPress={() => handleEventCUD('update')}
+                    // style={styles.button}
+                    title="Update"
+                //color="#841584"
+                />
+                    : <Button
+                        onPress={() => handleEventCUD('create')}
+                        // style={styles.button}
+                        title="Create"
+                    //color="#841584"
+                    />
                 }
-
-
-                <Text style={styles.text}>{marker.body}</Text>
-
-                <Text style={styles.bodyText} >{marker.category}</Text>
             </View>
         )
 
@@ -148,8 +187,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        paddingVertical: 10,
+        paddingBottom: 20,
+        height
 
+    },
+    formContainer: {
+        flex: 1,
+        flexDirection: "column",
+        paddingTop: 50,
+        width: '80%',
+        alignItems: 'center',
+        alignContent: "center",
+        justifyContent: "space-between"
     },
     insideText: {
         fontWeight: 'bold',
@@ -161,12 +210,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
 
     },
+    form: {
+        width: '100%'
+    },
     bodyText: {
 
 
     },
     photoIcons: {
-
+        height: height / 4,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'stretch',
@@ -174,7 +226,7 @@ const styles = StyleSheet.create({
     },
     coverImage: {
         resizeMode: 'center',
-        height: 400,
+        height: height / 4,
         width: width,
         position: 'relative',
         top: 0,

@@ -14,6 +14,7 @@ import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from 'react-apollo';
 import AuthContextProvider from './context/AuthContext';
 
+
 // const link = new HttpLink({ uri: 'http://localhost:5000/graphq' });
 // const client = new ApolloClient({
 //   cache: new InMemoryCache(),

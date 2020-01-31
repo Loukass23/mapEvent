@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, FC } from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableHighlight, Animated } from 'react-native';
 import MapView, { Region, Marker, Callout, MapEvent, Circle } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
 import { EventContext, } from '../context/EventContext'
@@ -22,7 +22,6 @@ import ApolloClient from 'apollo-client';
 
 
 
-
 interface Props {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     client: ApolloClient<object>
@@ -36,13 +35,14 @@ const { width, height } = Dimensions.get('window');
 const MapScreen: FC<Props> = ({ navigation }) => {
 
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
-    const { events, getAllEvents, getEventsByRadius, loading, radius } = useContext(EventContext)
+    const { events, getAllEvents, getEventsByRadius, loading, radius,
+        handleSetMarker, marker } = useContext(EventContext)
     const [region, setRegion] = useState<Region | undefined>(userRegion);
 
     useEffect(() => {
-        getEventsByRadius()
+        // getEventsByRadius()
         setRegion(userRegion)
-        // getAllEvents()
+        getAllEvents()
     }, [userRegion])
 
 
@@ -58,7 +58,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
     console.log('events :', events);
 
-    const [marker, setMarker] = useState<EventLib.Event | undefined>(null)
+    // const [marker, setMarker] = useState<EventLib.Event | undefined>(null)
     useEffect(() => { console.log('myMarker :', marker) }, [marker]);
 
 
@@ -73,7 +73,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
     const onAddEventPress = () => {
         //navigation.navigate('Event')
         const { latitude, longitude } = poi.coordinate
-        setMarker({
+        handleSetMarker({
             geometry: { coordinates: [latitude, longitude], type: 'Point' },
             id: null,
             category: '',
@@ -81,6 +81,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             type: '',
             properties: {}
         })
+
     }
 
     const renderPoi = () => (
@@ -148,7 +149,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                 description={marker.body}
             >
                 <Callout
-                    onPress={() => setMarker(marker)} >
+                    onPress={() => handleSetMarker(marker)} >
                     <View >
                         <Text style={styles.makerTitle}>
                             {marker.category}</Text>
@@ -158,6 +159,8 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             </Marker>
         );
     };
+
+    //Normal state, no marker
 
 
     if (marker == null)
@@ -195,9 +198,8 @@ const MapScreen: FC<Props> = ({ navigation }) => {
         )
     else return (
         <View style={styles.eventDetails}>
-
             <TouchableHighlight
-                onPress={() => setMarker(null)}
+                onPress={() => handleSetMarker(null)}
                 style={styles.backButton}
             >
                 <Ionicons

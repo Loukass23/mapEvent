@@ -1,49 +1,11 @@
 import React, { useState, createContext, useContext } from 'react'
 import { EventLib, LocationLib } from '../@types/index'
-import gql from 'graphql-tag';
-import { graphql, useQuery } from 'react-apollo';
-import { queryAllEvents, queryEventsByRadius } from './queries';
+import { queryAllEvents, queryEventsByRadius, createEvent } from './queries';
 import { LocationContext } from './LocationContext';
 import { serverURL } from '../constants/config';
+import { AuthContext } from './AuthContext';
 
-// var fetch = require('graphql-fetch')('https://sleepy-caverns-71410.herokuapp.com/graphql')
 
-
-const eventList = [
-    {
-        "id": "5de516da4f3ffc07a2301246",
-        "category": "Test",
-        "title": "Dropped Collection, weil, ging nicht",
-        "geometry": {
-            "coordinates": [
-                45.943,
-                -29.43
-            ]
-        }
-    },
-    {
-        "id": "5de519e8adbd9b088e615339",
-        "category": "Test",
-        "title": "Now it might work...",
-        "geometry": {
-            "coordinates": [
-                31.943,
-                35.43
-            ]
-        }
-    },
-    {
-        "id": "5de51a82251ce808cb5fb33e",
-        "category": "Test",
-        "title": "Still working, I hope...",
-        "geometry": {
-            "coordinates": [
-                30.943,
-                36.1345323
-            ]
-        }
-    }
-]
 
 
 
@@ -82,10 +44,16 @@ const initEvents: EventLib.EventContextInterface = {
         throw new Error('queryEventsByRadius() not implemented');
     },
     loading: false,
-    newEvent: null,
     radius: 100,
     handleSetRadius: () => {
         throw new Error('handleSetRadius() not implemented');
+    },
+    marker: null,
+    handleSetMarker: (marker: EventLib.Event) => {
+        throw new Error('setMarker() not implemented');
+    },
+    handleEventCUD: (type: string) => {
+        throw new Error('handleEventCUD() not implemented');
     },
 }
 
@@ -95,22 +63,21 @@ export const EventContext = createContext<EventLib.EventContextInterface>(initEv
 
 const EventContextProvider = (props: { children: React.ReactNode; }) => {
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
+    const { user } = useContext(AuthContext)
     const [events, setEvents] = useState<EventLib.EventList>([])
     const [loading, setLoading] = useState<boolean>(false)
-    const [radius, setRadius] = useState<number>(100)
+    const [radius, setRadius] = useState<number>(100000)
 
-    const [newEvent, setNewEvent] = useState<EventLib.Event>()
+    const [marker, setMarker] = useState<EventLib.Event>()
 
     const handleSetRadius = (radius: number) => {
         setRadius(radius)
         getEventsByRadius()
     }
-    const fetchEvents = async (query: string) => {
+    const fetchEvents = async (query: string, headers) => {
         const options = {
             method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers,
             body: JSON.stringify({
                 query
             })
@@ -126,11 +93,28 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
 
     }
 
+    const handleEventCUD = async (type: string) => {
+        console.log('type :', type);
+        if (user) {
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user.token}`
+            }
+            switch (type) {
+                case 'create': {
+                    const query = createEvent(marker)
+                    const data = await fetchEvents(query, headers)
+                }
+            }
+        }
+    }
     const getEventsByRadius = async () => {
-        console.log('user :', userRegion);
         const { latitude, longitude } = userRegion
+        const headers = {
+            "Content-Type": "application/json"
+        }
         const query = queryEventsByRadius(radius, longitude, latitude, "Meet")
-        const data = await fetchEvents(query)
+        const data = await fetchEvents(query, headers)
 
         setLoading(false)
         const { eventsInRadius } = data
@@ -139,11 +123,24 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
 
     }
 
+    const handleSetMarker = (marker: EventLib.Event) => {
+        setMarker(marker)
+
+    }
+    // const handleSetMarker = (key: string, markerArg: any) => {
+    //     setMarker({
+    //         ...marker,
+    //         [key]: markerArg
+    //     })
+
+    // }
 
     const getAllEvents = async () => {
-
+        const headers = {
+            "Content-Type": "application/json"
+        }
         const query = queryAllEvents()
-        const data = await fetchEvents(query)
+        const data = await fetchEvents(query, headers)
 
         setLoading(false)
         const { events } = data
@@ -184,7 +181,7 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
     // }
 
     return (
-        <EventContext.Provider value={{ events, getAllEvents, loading, newEvent, getEventsByRadius, radius, handleSetRadius }}>
+        <EventContext.Provider value={{ events, getAllEvents, loading, marker, handleSetMarker, getEventsByRadius, radius, handleSetRadius, handleEventCUD }}>
             {props.children}
         </EventContext.Provider>
     )

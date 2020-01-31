@@ -6,3 +6,27 @@ export const markerImages = {
     Category5: require('../assets/images/Marker5.png'),
 
 };
+
+export const markers = [
+    {
+        name: "Trash",
+        image: require('../assets/images/Marker1.png')
+    },
+    {
+        name: "Road",
+        image: require('../assets/images/Marker2.png')
+    },
+    {
+        name: "Vandalism",
+        image: require('../assets/images/Marker3.png')
+    },
+    {
+        name: "Traffic",
+        image: require('../assets/images/Marker4.png')
+    },
+    {
+        name: "Category5",
+        image: require('../assets/images/Marker5.png')
+    },
+
+];

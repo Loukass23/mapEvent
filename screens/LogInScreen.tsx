@@ -26,58 +26,70 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
 
     return (
 
-        <View style={styles.container}>
-            {!user ? <View style={styles.form}>
-                <Text>Email</Text>
-                <TextInput
-                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                    onChangeText={email => setEmail(email)}
-                    value={email}
-                />
-                <Text>Password</Text>
-                <TextInput
-                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                    onChangeText={password => setPassword(password)}
-                    value={password}
-                />
-                <TextInput
-                    value={'this.state.inputValue'}
-                    style={styles.input}
-                    placeholder="Enter something here"
-                // onChangeText={this.handleTextChange}
-                />
+        <View style={styles.maincontainer}>
+            <MenuButton navigation={navigation} />
+            <Text style={styles.title}>Sign In</Text>
+            <View style={styles.container}>
 
-                <Button
-                    onPress={() => handleLogInPress()}
-                    // style={styles.button}
-                    title="Log In"
-                    color="#841584"
-                />
-            </View> :
-                <View style={styles.form}>
-                    <Text style={styles.text}>{user.username}</Text>
-                    <Text style={styles.text}>{user.email}</Text>
-                    <Text style={styles.text}>{user.firstName}  {user.lastName}</Text>
-                </View>
-            }
 
+
+                {!user ? <View style={styles.form}>
+                    <Text>Email</Text>
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={email => setEmail(email)}
+                        value={email}
+                    />
+                    <Text>Password</Text>
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={password => setPassword(password)}
+                        value={password}
+                    />
+
+
+                    <Button
+                        onPress={() => handleLogInPress()}
+                        // style={styles.button}
+                        title="Log In"
+                    //color="#841584"
+                    />
+                </View> :
+                    <View style={styles.form}>
+                        <Text style={styles.text}>{user.username}</Text>
+                        <Text style={styles.text}>{user.email}</Text>
+                        <Text style={styles.text}>{user.firstName}  {user.lastName}</Text>
+                    </View>
+                }
+            </View>
 
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    //     paddingTop: 50,
-    //     alignItems: "center",
-    //     justifyContent: "space-between"
-
-    // },
+    maincontainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+        // backgroundColor: Colors.background,
+    },
+    title: {
+        fontSize: 20,
+        textAlign: "center",
+        margin: 10
+    },
     container: {
         flex: 1,
-        padding: 30,
+        flexDirection: "column",
+        paddingTop: 50,
+        width: '80%',
+        alignItems: 'center',
+        alignContent: "center",
+        justifyContent: "space-between"
     },
+
     input: {
         flex: 2,
     },
@@ -86,9 +98,10 @@ const styles = StyleSheet.create({
 
     },
     form: {
-        paddingBottom: 10,
-        flexDirection: 'column',
-        justifyContent: 'space-around'
+
+        width: '100%'
+        // flexDirection: 'column',
+        // justifyContent: 'space-around'
     },
 
     photoIcons: {

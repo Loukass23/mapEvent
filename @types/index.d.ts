@@ -44,10 +44,12 @@ export namespace EventLib {
         events: EventList,
         getAllEvents(): void,
         loading: boolean,
-        newEvent: Event,
         getEventsByRadius(): void,
         handleSetRadius(radius: number): void,
-        radius: number
+        radius: number,
+        marker: Event,
+        handleSetMarker(event: EventLib.Event): void,
+        handleEventCUD(type: string): void,
     }
 
     export type EventList = Array<Event>
