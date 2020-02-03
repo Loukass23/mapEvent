@@ -11,6 +11,8 @@ import { useContext } from "react";
 import EventCategory from "./EventCategory";
 import { markerImages } from '../../constants/Markers'
 import { EventContext } from "../../context/EventContext";
+import * as firebase from "firebase";
+import { firebaseConfig } from "../../constants/config";
 
 
 
@@ -23,6 +25,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
         const { marker, handleSetMarker, handleEventCUD } = useContext(EventContext)
 
         const [uri, setUri] = React.useState<string>(marker.img)
+        const [progressUpload, setprogressUpload] = React.useState<number>(0)
 
         const { getAddress, eventAddress } = useContext(LocationContext)
 
@@ -77,21 +80,101 @@ export const MarkerDetails: React.FC<EventLib.Event> =
         const imageUpload = async (result: any) => {
             const { uri } = result
             setUri(uri)
-            console.log('uri :', uri);
+
             const response = await fetch(result.uri);
             const blob = await response.blob();
-            console.log('blob :', blob);
-        }
 
-        const { title, body, geometry, category, id } = marker
+            firebaseUpload(blob)
+        }
+        const firebaseUpload = async (file) => {
+            // File or Blob named mountains.jpg
+            firebase.initializeApp(firebaseConfig);
+
+            // Create the file metadata
+            var metadata = {
+                contentType: 'image/jpeg'
+            };
+            const id = `${marker.title}-${marker.category}-${new Date()}`;
+
+            const storageRef = firebase
+                .storage()
+                .ref()
+                .child(`event/${id}`);
+            // Upload file and metadata to the object 'images/mountains.jpg'
+            var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                function (snapshot) {
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case firebase.storage.TaskState.PAUSED: // or 'paused'
+                            console.log('Upload is paused');
+                            break;
+                        case firebase.storage.TaskState.RUNNING: // or 'running'
+                            console.log('Upload is running');
+                            break;
+                    }
+                }, (error) => {
+                    console.log('error :', error);
+
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(img => {
+                        console.log('File available at', img);
+                        handleSetMarker({ ...marker, img })
+                    });
+                });
+        }
+        // const firebaseUpload = async (blob: Blob | ArrayBuffer) => {
+        //     // const uri = this.props.issue.PICTURE_FILE
+        //     firebase.initializeApp(firebaseConfig);
+
+        //     const id = `${marker.title}-${marker.category}-${new Date()}`;
+        //     // this.setState({ photoUploading: true })
+        //     // const response = await fetch(uri);
+        //     // const blob = await response.blob();
+        //     console.log('blob :', blob);
+
+        //     return new Promise((resolve, reject) => {
+        //         const storageRef = firebase
+        //             .storage()
+        //             .ref()
+        //             .child(`event/${id}`);
+
+        //         const uploadTask = storageRef.put(blob)
+        //         uploadTask.on('state_changed',
+        //             snapshot => {
+        //                 let progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+        //                 setprogressUpload(progress / 100);
+        //                 console.log(progressUpload);
+        //             },
+        //             err => {
+        //                 console.log('error', err)
+        //                 reject()
+        //             },
+        //             () => {
+        //                 uploadTask.snapshot.ref.getDownloadURL().then(img => {
+        //                     //resolve(img)
+        //                     console.log('downloadURL :', img);
+        //                     handleSetMarker({ ...marker, img })
+
+        //                 })
+        //             }
+        //         )
+        //     })
+        // }
+
+        const { title, body, geometry, category, id, img } = marker
 
         return (
             <View style={styles.container} >
 
-                {uri ?
+                {img ?
                     <View>
                         <Image
-                            source={{ uri }}
+                            source={{ uri: img }}
                             style={styles.coverImage}
                             PlaceholderContent={<ActivityIndicator />}
                         />

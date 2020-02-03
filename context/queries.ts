@@ -30,11 +30,36 @@ export const queryAllEvents = () => <string>`
                 }
         } `
 
-export const queryEventsByRadius = (radius: number, longitude: number, latitude: number, category: string) => `
+export const queryEventsByRadius = (radius: number, longitude: number, latitude: number) => `
 query eventsInRadius {
         eventsInRadius(
         radius: ${radius},
-        
+       
+      location:  {
+          type: Point,
+    coordinates: [${longitude},${latitude}]
+      }
+         )
+        {
+              id,
+              img,
+        category,
+        title,
+        type,
+        createdBy {
+            id,
+            username},
+        geometry { 
+            coordinates
+            }
+        }
+    }
+`
+export const queryEventsByRadiusCategory = (radius: number, longitude: number, latitude: number, category: string) => `
+query eventsInRadius {
+        eventsInRadius(
+        radius: ${radius},
+       
       location:  {
           type: Point,
     coordinates: [${longitude},${latitude}]
@@ -59,7 +84,7 @@ query eventsInRadius {
 export const createEvent = (marker: EventLib.Event) => `
  mutation addEvent{
        addEvent( 
-        coordinates: [ ${marker.geometry.coordinates[0]},${marker.geometry.coordinates[1]} ],
+        coordinates: [ ${marker.geometry.coordinates[1]},${marker.geometry.coordinates[0]} ],
       type: "test",
       category: "${marker.category}", 
       title: "${marker.title}",

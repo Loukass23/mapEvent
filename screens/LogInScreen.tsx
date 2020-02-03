@@ -12,7 +12,7 @@ interface Props {
 }
 
 const LogInScreen: React.FC<Props> = ({ navigation }) => {
-    const { logIn, user } = useContext(AuthContext)
+    const { logIn, user, signOut } = useContext(AuthContext)
 
 
     const [email, setEmail] = React.useState('');
@@ -59,6 +59,15 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
                         <Text style={styles.text}>{user.username}</Text>
                         <Text style={styles.text}>{user.email}</Text>
                         <Text style={styles.text}>{user.firstName}  {user.lastName}</Text>
+
+                        <Button
+                            // style={styles.button3}
+                            onPress={() => signOut()}
+                            title="LOG OUT"
+                            // color={Colors.primary}
+                            accessibilityLabel="Log Out"
+                        />
+
                     </View>
                 }
             </View>

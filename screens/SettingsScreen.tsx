@@ -3,6 +3,7 @@ import React, { FC, useContext } from "react";
 import { StyleSheet, Text, View, ScrollView, Slider, Button } from "react-native";
 import MenuButton from "../components/navigation/MenuButton";
 import { EventContext } from "../context/EventContext";
+import { AuthContext } from "../context/AuthContext";
 // import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
@@ -11,6 +12,7 @@ interface Props {
 }
 export const SettingsScreen: FC<Props> = ({ navigation }) => {
     const { handleSetRadius, radius } = useContext(EventContext)
+    const { signOut, user } = useContext(AuthContext)
 
     return (
         <View style={styles.container}>
@@ -48,20 +50,28 @@ export const SettingsScreen: FC<Props> = ({ navigation }) => {
 
                 </View>
             </ScrollView>
+            {user ?
+                <View style={styles.footer}>
+                    <View style={styles.containerRow}  >
+                        <Text >Not {user.username} ?</Text>
 
-            <View style={styles.footer}>
-                <View style={styles.containerRow}  >
-                    <Text >Not {'username'} ?</Text>
-
-                    <Button
-                        // style={styles.button3}
-                        onPress={() => console.log('log out')}
-                        title="LOG OUT"
-                        // color={Colors.primary}
-                        accessibilityLabel="Log Out"
-                    />
-                </View>
-            </View>
+                        <Button
+                            // style={styles.button3}
+                            onPress={() => signOut()}
+                            title="LOG OUT"
+                            // color={Colors.primary}
+                            accessibilityLabel="Log Out"
+                        />
+                    </View>
+                </View> :
+                <Button
+                    // style={styles.button3}
+                    onPress={() => navigation.navigate('LogIn')}
+                    title="LOG IN"
+                    // color={Colors.primary}
+                    accessibilityLabel="Log Out"
+                />
+            }
 
         </View>
     );

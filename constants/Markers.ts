@@ -3,13 +3,13 @@ export const markerImages = {
     Road: require('../assets/images/Marker2.png'),
     Vandalism: require('../assets/images/Marker3.png'),
     Traffic: require('../assets/images/Marker4.png'),
-    Category5: require('../assets/images/Marker5.png'),
+    Trash: require('../assets/images/Marker5.png'),
 
 };
 
 export const markers = [
     {
-        name: "Trash",
+        name: "Meet",
         image: require('../assets/images/Marker1.png')
     },
     {
@@ -25,7 +25,7 @@ export const markers = [
         image: require('../assets/images/Marker4.png')
     },
     {
-        name: "Category5",
+        name: "Trash",
         image: require('../assets/images/Marker5.png')
     },
 

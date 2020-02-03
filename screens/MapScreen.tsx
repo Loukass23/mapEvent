@@ -40,10 +40,15 @@ const MapScreen: FC<Props> = ({ navigation }) => {
     const [region, setRegion] = useState<Region | undefined>(userRegion);
 
     useEffect(() => {
+        getEventsByRadius()
+        setRegion(userRegion)
+        // getAllEvents()
+    }, [userRegion])
+    useEffect(() => {
         // getEventsByRadius()
         setRegion(userRegion)
-        getAllEvents()
-    }, [userRegion])
+
+    }, [marker])
 
 
 
@@ -126,7 +131,6 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                         latitude,
                         longitude
                     }}
-
                 >
                     <ClusterMarker count={marker.properties.point_count} />
                 </Marker>

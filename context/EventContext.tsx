@@ -113,7 +113,7 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
         const headers = {
             "Content-Type": "application/json"
         }
-        const query = queryEventsByRadius(radius, longitude, latitude, "Meet")
+        const query = queryEventsByRadius(radius, longitude, latitude)
         const data = await fetchEvents(query, headers)
 
         setLoading(false)

@@ -1,10 +1,12 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, useEffect } from 'react'
 import { Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { UserLib } from '../@types';
-import { googleAPIkey, serverURL } from '../constants/config'
+import { serverURL } from '../constants/config'
 import { mutationLogIn } from './queries';
+
+import * as  SecureStore from 'expo-secure-store'
 
 
 
@@ -13,6 +15,9 @@ const initAuth: UserLib.AuthContextInterface = {
 
     logIn: (email: string, pwd: string) => {
         throw new Error('logIn() not implemented');
+    },
+    signOut: () => {
+        throw new Error('signOut() not implemented');
     },
     user: null
 
@@ -25,6 +30,10 @@ export const AuthContext = createContext<UserLib.AuthContextInterface>(initAuth)
 const AuthContextProvider = (props: { children: React.ReactNode; }) => {
 
     const [user, setUser] = useState<UserLib.User>()
+    useEffect(() => {
+        getStorageToken()
+
+    }, [])
 
     const logIn = async (email: string, pwd: string) => {
         const query = mutationLogIn(email, pwd)
@@ -37,22 +46,93 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
                 query
             })
         };
-
-        console.log('query :', query);
-
         const res = await fetch(serverURL, options)
         const data = await res.json()
-
-        console.log('data :', data);
         if (data.error) console.log('data.error :', data.error);
-        else setUser(data.data.login)
+        else {
+            const user = data.data.login
+            setUser(user)
+            setStorageToken(user)
+        }
 
+    }
+
+    const getStorageToken = async () => {
+
+        try {
+            const email = await SecureStore.getItemAsync('email');
+            const username = await SecureStore.getItemAsync('username');
+            const firstName = await SecureStore.getItemAsync('firstName');
+            const lastName = await SecureStore.getItemAsync('lastName');
+            const token = await SecureStore.getItemAsync('token');
+            const date = await SecureStore.getItemAsync('timestamp');
+
+            setUser({ email, username, firstName, lastName, token })
+
+            console.log('user :', user);
+            // const now = new Date()
+            // const dateToken = new Date(date)
+            // const ageTokenMinutes = (now - dateToken) / 60000;
+            // console.log('Age Token (min):', ageTokenMinutes);
+            // if (ageTokenMinutes <= 60) {
+            //     if (username && token) {
+
+            //         username,
+            //             token
+
+            //     }
+            //     else {
+            //         removeStorageToken()
+            //         console.log('Token too old');
+            //     }
+
+
+        } catch (e) {
+            console.log('No token found', e)
+        }
+
+    }
+
+    const setStorageToken = async (user: UserLib.User) => {
+        console.log('user', user)
+        const date = new Date()
+        try {
+
+            await SecureStore.setItemAsync('email', user.email);
+            await SecureStore.setItemAsync('firstName', user.firstName);
+            await SecureStore.setItemAsync('lastName', user.lastName);
+            await SecureStore.setItemAsync('token', user.token);
+            await SecureStore.setItemAsync('username', user.username);
+            await SecureStore.setItemAsync('timestamp', date.toISOString());
+        } catch (e) {
+            console.log('failed to set storage token', e);
+        }
+
+        console.log('set storage token')
+    }
+
+    const signOut = async () => {
+
+        try {
+
+            await SecureStore.deleteItemAsync('email');
+            await SecureStore.deleteItemAsync('firstName');
+            await SecureStore.deleteItemAsync('lastName');
+            await SecureStore.deleteItemAsync('token');
+            await SecureStore.deleteItemAsync('username');
+            await SecureStore.deleteItemAsync('timestamp');
+            setUser(null)
+        } catch (e) {
+            console.log('failed to delete storage token', e);
+        }
+
+        console.log('deleted storage token')
     }
 
 
 
     return (
-        <AuthContext.Provider value={{ user, logIn }}>
+        <AuthContext.Provider value={{ user, logIn, signOut }}>
             {props.children}
         </AuthContext.Provider>
     )

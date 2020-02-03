@@ -1,0 +1,18 @@
+you have to make change in this file {project_root}\node_modules\metro-config\src\defaults\blacklist.js
+
+there is an invalid regular expression that needed changed. I changed the first expression under sharedBlacklist from:
+
+var sharedBlacklist = [
+  /node_modules[/\\]react[/\\]dist[/\\].*/,
+  /website\/node_modules\/.*/,
+  /heapCapture\/bundle\.js/,
+  /.*\/__tests__\/.*/
+];
+to
+
+var sharedBlacklist = [
+  /node_modules[\/\\]react[\/\\]dist[\/\\].*/,
+  /website\/node_modules\/.*/,
+  /heapCapture\/bundle\.js/,
+  /.*\/__tests__\/.*/
+];

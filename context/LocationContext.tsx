@@ -62,7 +62,7 @@ const LocationContextProvider = (props) => {
             .then((response) => response.json())
             .then((responseJson) => {
                 // console.log('responseJson :', responseJson);
-                let address
+                let address: React.SetStateAction<EventAddress>
                 if (responseJson.status === "ZERO_RESULTS") address = {
                     formatted: "No address found",
                     city: "",
