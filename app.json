@@ -23,9 +23,23 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "description": ""
+
+    "android": {
+      "package": "fr.estia.net.dupias.l.mapEvent",
+      "versionCode": 1,
+      "icon": "./assets/images/logoTemp.png",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "MANAGE_DOCUMENTS"
+      ],
+      "googleServicesFile": "android/app/google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAZhVd6bmKtkCf7mqjTG_Iud7lMnqjq6r4"
+        }
+      }
+    }
   }
 }
