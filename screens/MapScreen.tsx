@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, FC } from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableHighlight, Animated } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableHighlight, Animated, Easing } from 'react-native';
 import MapView, { Region, Marker, Callout, MapEvent, Circle } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
 import { EventContext, } from '../context/EventContext'
@@ -19,6 +19,7 @@ import {
     NavigationState,
 } from 'react-navigation';
 import ApolloClient from 'apollo-client';
+import { OnMapMessage } from '../components/events/OnMapMessage';
 
 
 
@@ -125,6 +126,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             const latitudeDeltaZoom = latitudeDelta - 1
             return (
                 <Marker
+                    style={styles.marker}
                     onPress={() => setRegion({ latitude, longitude, latitudeDelta: latitudeDeltaZoom, longitudeDelta: longitudeDeltaZoom })}
                     key={key}
                     coordinate={{
@@ -138,6 +140,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
         }
         // If a single marker
         return (
+
             <Marker
                 key={key}
                 style={{
@@ -192,10 +195,16 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                             fillColor={Colors.radius}
                         />
                     }
+
                 </MapView>
+
                 {loading && <View style={styles.loading}>
-                    <Text>Loading Events</Text>
+                    <OnMapMessage message={"Loading Events"} />
+
+
                 </View>}
+
+
 
                 <MenuButton navigation={navigation} />
             </View>
@@ -213,6 +222,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                     size={32}
 
                 />
+
                 {/* <Icon name="md-arrow-back"
                     type='ionicons'
                     color="grey" /> */}
@@ -230,6 +240,58 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 }
 // export default graphql(getAllEvents)(MapScreen)
 export default MapScreen
+
+const FadeInView = (props) => {
+    const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
+
+    React.useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 100,
+            easing: Easing.back(1),
+            duration: 2000,
+        }).start();
+    }, [])
+
+    return (
+        <Animated.View                 // Special animatable View
+            style={{
+                ...props.style,
+                opacity: fadeAnim,         // Bind opacity to animated value
+            }}
+        >
+            {props.children}
+        </Animated.View>
+    );
+}
+const JumpAnimation = (props) => {
+    const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
+
+    console.log('fadeAnim :', fadeAnim);
+
+    React.useEffect(() => {
+        Animated.timing(
+            fadeAnim,
+            {
+                toValue: 100,
+                duration: 1000,
+            }
+        ).start();
+    }, [])
+
+    return (
+
+        <Animated.View
+            style={{
+                ...props.style,
+                transform: [
+                    { translateY: fadeAnim },
+
+                    { perspective: 1000 }, // without this line this Animation will not render on Android while working fine on iOS
+                ],
+            }}
+        />
+    );
+}
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
@@ -238,6 +300,10 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
 
     },
+    marker: {
+
+    },
+
     loading: {
         justifyContent: 'center',
         alignItems: 'center',
