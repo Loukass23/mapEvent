@@ -17,3 +17,5 @@ constants/config.ts
 #
 .jest/
 
+app.json
+android/app/google-services.json
