@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button, ScrollView } from 'react-native';
 import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
@@ -101,7 +101,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                 .ref()
                 .child(`event/${id}`);
             // Upload file and metadata to the object 'images/mountains.jpg'
-            var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+            var uploadTask = storageRef.child(`event/${id}`).put(file, metadata);
 
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -169,7 +169,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
         const { title, body, geometry, category, id, img } = marker
 
         return (
-            <View style={styles.container} >
+            <ScrollView style={styles.container} >
 
                 {img ?
                     <View>
@@ -259,7 +259,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                     //color="#841584"
                     />
                 }
-            </View>
+            </ScrollView>
         )
 
     }

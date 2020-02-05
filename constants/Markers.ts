@@ -4,6 +4,7 @@ export const markerImages = {
     Vandalism: require('../assets/images/Marker3.png'),
     Traffic: require('../assets/images/Marker4.png'),
     Trash: require('../assets/images/Marker5.png'),
+    Add: require('../assets/images/AddMarker.png'),
 
 };
 

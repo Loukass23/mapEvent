@@ -9,57 +9,55 @@ import { AuthContext } from './AuthContext';
 
 
 
-const event1: EventLib.Event = {
-    id: 1,
-    geometry: {
-        type: "Point",
-        coordinates: [-121.3, 37.423]
-    },
-    properties: {},
-    type: '',
-    title: 'Come Meet Us',
-    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quam ipsum, porttitor sed molestie eget, molestie sed eros. Aliquam euismod mauris sit amet neque lobortis aliquet.',
-    category: 'Meet',
-    img: 'https://res.cloudinary.com/ds3w3iwbk/image/upload/v1560349630/MERN/20170409_193026.jpg'
-}
-const event2: EventLib.Event = {
-    id: 1,
-    geometry: {
-        type: "Point",
-        coordinates: [-121.2, 37.421]
-    },
-    properties: {},
+// const event1: EventLib.Event = {
+//     id: 1,
+//     geometry: {
+//         type: "Point",
+//         coordinates: [-121.3, 37.423]
+//     },
+//     properties: {},
+//     type: '',
+//     title: 'Come Meet Us',
+//     body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quam ipsum, porttitor sed molestie eget, molestie sed eros. Aliquam euismod mauris sit amet neque lobortis aliquet.',
+//     category: 'Meet',
+//     img: 'https://res.cloudinary.com/ds3w3iwbk/image/upload/v1560349630/MERN/20170409_193026.jpg'
+// }
+// const event2: EventLib.Event = {
+//     id: 1,
+//     geometry: {
+//         type: "Point",
+//         coordinates: [-121.2, 37.421]
+//     },
+//     properties: {},
 
-    type: '',
-    title: 'test',
-    category: 'test',
-}
+//     type: '',
+//     title: 'test',
+//     category: 'test',
+// }
 
-const initEvents: EventLib.EventContextInterface = {
-    events: [event1, event2],
-    getAllEvents: () => {
-        throw new Error('getAllEvents() not implemented');
-    },
-    getEventsByRadius: () => {
-        throw new Error('queryEventsByRadius() not implemented');
-    },
-    loading: false,
-    radius: 100,
-    handleSetRadius: () => {
-        throw new Error('handleSetRadius() not implemented');
-    },
-    marker: null,
-    handleSetMarker: (marker: EventLib.Event) => {
-        throw new Error('setMarker() not implemented');
-    },
-    handleEventCUD: (type: string) => {
-        throw new Error('handleEventCUD() not implemented');
-    },
-}
+// const initEvents: EventLib.EventContextInterface = {
+//     events: [event1, event2],
+//     getAllEvents: () => {
+//         throw new Error('getAllEvents() not implemented');
+//     },
+//     getEventsByRadius: () => {
+//         throw new Error('queryEventsByRadius() not implemented');
+//     },
+//     loading: false,
+//     radius: 100,
+//     handleSetRadius: () => {
+//         throw new Error('handleSetRadius() not implemented');
+//     },
+//     marker: null,
+//     handleSetMarker: (marker: EventLib.Event) => {
+//         throw new Error('setMarker() not implemented');
+//     },
+//     handleEventCUD: (type: string) => {
+//         throw new Error('handleEventCUD() not implemented');
+//     },
+// }
 
-export const EventContext = createContext<EventLib.EventContextInterface>(initEvents)
-
-
+export const EventContext = createContext<EventLib.EventContextInterface>(null)
 
 const EventContextProvider = (props: { children: React.ReactNode; }) => {
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
@@ -104,10 +102,13 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
                 case 'create': {
                     const query = createEvent(marker)
                     const data = await fetchEvents(query, headers)
+                    setMarker(null)
+                    getEventsByRadius()
                 }
             }
         }
     }
+
     const getEventsByRadius = async () => {
         const { latitude, longitude } = userRegion
         const headers = {
@@ -120,12 +121,10 @@ const EventContextProvider = (props: { children: React.ReactNode; }) => {
         const { eventsInRadius } = data
         setEvents(eventsInRadius);
         // setEvents([...events, ...eventsInRadius]);
-
     }
 
     const handleSetMarker = (marker: EventLib.Event) => {
         setMarker(marker)
-
     }
     // const handleSetMarker = (key: string, markerArg: any) => {
     //     setMarker({

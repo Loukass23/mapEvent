@@ -82,9 +82,9 @@ const MapScreen: FC<Props> = ({ navigation }) => {
         handleSetMarker({
             geometry: { coordinates: [latitude, longitude], type: 'Point' },
             id: null,
-            category: '',
-            title: '',
-            type: '',
+            category: null,
+            title: null,
+            type: null,
             properties: {}
         })
 
@@ -93,6 +93,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
     const renderPoi = () => (
 
         <Marker coordinate={poi.coordinate}
+            image={markerImages.Add}
         >
             <Callout
                 onPress={() => onAddEventPress()}
@@ -126,6 +127,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
             const latitudeDeltaZoom = latitudeDelta - 1
             return (
                 <Marker
+
                     style={styles.marker}
                     onPress={() => setRegion({ latitude, longitude, latitudeDelta: latitudeDeltaZoom, longitudeDelta: longitudeDeltaZoom })}
                     key={key}
@@ -156,7 +158,8 @@ const MapScreen: FC<Props> = ({ navigation }) => {
                 description={marker.body}
             >
                 <Callout
-                    onPress={() => handleSetMarker(marker)} >
+                    onPress={() => handleSetMarker(marker)}
+                >
                     <View >
                         <Text style={styles.makerTitle}>
                             {marker.category}</Text>
@@ -198,11 +201,11 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
                 </MapView>
 
-                {loading && <View style={styles.loading}>
-                    <OnMapMessage message={"Loading Events"} />
-
-
-                </View>}
+                <View style={styles.loading}>
+                    {loading ? <OnMapMessage message={"Loading Events"} /> :
+                        < OnMapMessage message={`${events.length} found`} />
+                    }
+                </View>
 
 
 
