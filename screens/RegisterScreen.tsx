@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native'
+import { View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Dimensions, KeyboardAvoidingView } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Image } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,6 +22,9 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [username, setUsername] = React.useState('');
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
     const [avatar, setAvatar] = React.useState('');
 
 
@@ -30,17 +33,21 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
     }
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <MenuButton navigation={navigation} />
+            <Text>Register</Text>
             {avatar ?
                 <View style={styles.photo}>
                     <Image
+                        resizeMode="contain"
                         source={{ uri: avatar }}
                         style={styles.coverImage}
                         PlaceholderContent={<ActivityIndicator />}
                     />
                 </View> :
-                <View style={styles.photo}>
+                <View style={styles.photo}
+
+                >
                     <FirebaseUpload type="profile" />
                 </View>}
             <TextInput style={styles.input}
@@ -51,6 +58,33 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                 autoCapitalize="none"
                 onChangeText={email => setEmail(email)}
                 value={email}
+            />
+            <TextInput style={styles.input}
+                autoCompleteType="username"
+                underlineColorAndroid="transparent"
+                placeholder="Username"
+                placeholderTextColor="black"
+                autoCapitalize="none"
+                onChangeText={username => setUsername(username)}
+                value={username}
+            />
+            <TextInput style={styles.input}
+                autoCompleteType="name"
+                underlineColorAndroid="transparent"
+                placeholder="First Name"
+                placeholderTextColor="black"
+                autoCapitalize="none"
+                onChangeText={firstName => setFirstName(firstName)}
+                value={firstName}
+            />
+            <TextInput style={styles.input}
+                autoCompleteType="name"
+                underlineColorAndroid="transparent"
+                placeholder="Last Name"
+                placeholderTextColor="black"
+                autoCapitalize="none"
+                onChangeText={lastName => setLastName(lastName)}
+                value={lastName}
             />
             <TextInput style={styles.input}
                 autoCompleteType="password"
@@ -65,9 +99,9 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                 style={styles.submitButton}
                 onPress={() => handleLogInPress()}
             >
-                <Text style={styles.submitButtonText}> LOG IN </Text>
+                <Text style={styles.submitButtonText}> REGISTER </Text>
             </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 export default RegisterScreen
@@ -78,7 +112,7 @@ const styles = StyleSheet.create({
         paddingTop: 40
     },
     photo: {
-        height: height / 4,
+        height: height / 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'stretch',
@@ -116,10 +150,12 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 15,
         height: 40,
-        //textAlign: 'center',
+        bottom: 5,
+        textAlign: 'center',
     },
     submitButtonText: {
-        color: 'white'
+        color: 'white',
+        textAlign: 'center'
     }
 })
 //     return (

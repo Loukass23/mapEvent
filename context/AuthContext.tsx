@@ -129,9 +129,6 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
 
         console.log('deleted storage token')
     }
-
-
-
     return (
         <AuthContext.Provider value={{ user, logIn, signOut }}>
             {props.children}

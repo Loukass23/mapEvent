@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button, ScrollView, ProgressBarAndroid } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button, ScrollView, ProgressBarAndroid, TouchableOpacity } from 'react-native';
 import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
@@ -25,111 +25,108 @@ export const MarkerDetails: React.FC<EventLib.Event> =
     () => {
         const { marker, handleSetMarker, handleEventCUD } = useContext(EventContext)
 
-        const [uri, setUri] = React.useState<string>(marker.img)
-        const [progressUpload, setprogressUpload] = React.useState<number>(0)
-
         const { getAddress, eventAddress } = useContext(LocationContext)
 
         React.useEffect(() => {
             getAddress(marker.geometry.coordinates[0], marker.geometry.coordinates[1])
         }, [])
 
-        const onChooseImagePress = async () => {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1
-            });
-            if (!result.cancelled) {
-                imageUpload(result)
-            }
-            // if (!result.cancelled) {
-            //     const foo: string = result.uri
-            //     this.handleUpload(foo.uri, 'test-image')
-            //         .then(() => {
-            //             Alert.alert("Success");
-            //         })
-            //         .catch((error) => {
-            //             Alert.alert(error);
-            //         });
-            // }
-        }
+        // const onChooseImagePress = async () => {
+        //     let result = await ImagePicker.launchImageLibraryAsync({
+        //         mediaTypes: ImagePicker.MediaTypeOptions.All,
+        //         allowsEditing: true,
+        //         aspect: [4, 3],
+        //         quality: 1
+        //     });
+        //     if (!result.cancelled) {
+        //         imageUpload(result)
+        //     }
+        // if (!result.cancelled) {
+        //     const foo: string = result.uri
+        //     this.handleUpload(foo.uri, 'test-image')
+        //         .then(() => {
+        //             Alert.alert("Success");
+        //         })
+        //         .catch((error) => {
+        //             Alert.alert(error);
+        //         });
+        // }
+        // }
 
-        const onChooseCameraPress = async () => {
-            let result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1
-            });
+        // const onChooseCameraPress = async () => {
+        //     let result = await ImagePicker.launchCameraAsync({
+        //         mediaTypes: ImagePicker.MediaTypeOptions.All,
+        //         allowsEditing: true,
+        //         aspect: [4, 3],
+        //         quality: 1
+        //     });
 
-            if (!result.cancelled) {
-                console.log(result);
+        //     if (!result.cancelled) {
+        //         console.log(result);
 
-                imageUpload(result)
-                //     .then(() => {
-                //         Alert.alert("Success");
-                //     })
-                //     .catch((error) => {
-                //         Alert.alert(error);
+        //         imageUpload(result)
+        //         //     .then(() => {
+        //         //         Alert.alert("Success");
+        //         //     })
+        //         //     .catch((error) => {
+        //         //         Alert.alert(error);
 
-                //     });
-            }
+        //         //     });
+        //     }
 
-        }
-        const imageUpload = async (result: any) => {
-            const { uri } = result
-            setUri(uri)
+        // }
+        // const imageUpload = async (result: any) => {
+        //     const { uri } = result
 
-            const response = await fetch(result.uri);
-            const blob = await response.blob();
 
-            firebaseUpload(blob)
-        }
-        const firebaseUpload = async (file) => {
-            // File or Blob named mountains.jpg
-            firebase.initializeApp(firebaseConfig);
+        //     const response = await fetch(result.uri);
+        //     const blob = await response.blob();
 
-            // Create the file metadata
-            var metadata = {
-                contentType: 'image/jpeg'
-            };
-            const id = `${marker.geometry.coordinates[0].toFixed(5)}-${marker.geometry.coordinates[0].toFixed(5)}-${new Date()}`;
+        //     firebaseUpload(blob)
+        // }
+        // const firebaseUpload = async (file) => {
+        //     // File or Blob named mountains.jpg
+        //     firebase.initializeApp(firebaseConfig);
 
-            const storageRef = firebase
-                .storage()
-                .ref()
-                .child(`event/${id}`);
-            // Upload file and metadata to the object 'images/mountains.jpg'
-            var uploadTask = storageRef.child(`event/${id}`).put(file, metadata);
+        //     // Create the file metadata
+        //     var metadata = {
+        //         contentType: 'image/jpeg'
+        //     };
+        //     const id = `${marker.geometry.coordinates[0].toFixed(5)}-${marker.geometry.coordinates[0].toFixed(5)}-${new Date()}`;
 
-            // Listen for state changes, errors, and completion of the upload.
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-                function (snapshot) {
-                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    setprogressUpload(progress)
-                    console.log('Upload is ' + progress + '% done');
-                    switch (snapshot.state) {
-                        case firebase.storage.TaskState.PAUSED: // or 'paused'
-                            console.log('Upload is paused');
-                            break;
-                        case firebase.storage.TaskState.RUNNING: // or 'running'
-                            console.log('Upload is running');
-                            break;
-                    }
-                }, (error) => {
-                    console.log('error :', error);
+        //     const storageRef = firebase
+        //         .storage()
+        //         .ref()
+        //         .child(`event/${id}`);
+        //     // Upload file and metadata to the object 'images/mountains.jpg'
+        //     var uploadTask = storageRef.child(`event/${id}`).put(file, metadata);
 
-                }, () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then(img => {
-                        setprogressUpload(0)
-                        console.log('File available at', img);
-                        handleSetMarker({ ...marker, img })
-                    });
-                });
-        }
+        //     // Listen for state changes, errors, and completion of the upload.
+        //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+        //         function (snapshot) {
+        //             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //             setprogressUpload(progress)
+        //             console.log('Upload is ' + progress + '% done');
+        //             switch (snapshot.state) {
+        //                 case firebase.storage.TaskState.PAUSED: // or 'paused'
+        //                     console.log('Upload is paused');
+        //                     break;
+        //                 case firebase.storage.TaskState.RUNNING: // or 'running'
+        //                     console.log('Upload is running');
+        //                     break;
+        //             }
+        //         }, (error) => {
+        //             console.log('error :', error);
+
+        //         }, () => {
+        //             uploadTask.snapshot.ref.getDownloadURL().then(img => {
+        //                 setprogressUpload(0)
+        //                 console.log('File available at', img);
+        //                 handleSetMarker({ ...marker, img })
+        //             });
+        //         });
+        // }
         // const firebaseUpload = async (blob: Blob | ArrayBuffer) => {
         //     // const uri = this.props.issue.PICTURE_FILE
         //     firebase.initializeApp(firebaseConfig);
@@ -185,40 +182,6 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                         <View style={styles.photo}>
                             <FirebaseUpload type="event" />
                         </View>
-                        // <View style={styles.photoIcons}>
-                        //     {progressUpload ?
-                        //         <ProgressBarAndroid
-                        //             styleAttr="Horizontal"
-                        //             indeterminate={false}
-                        //             progress={progressUpload}
-                        //         /> :
-                        //         <React.Fragment>
-
-                        //             <TouchableHighlight
-                        //                 onPress={onChooseImagePress}
-                        //                 style={styles.icon}
-                        //             >
-                        //                 <Ionicons
-
-                        //                     name='md-image'
-                        //                     color='grey'
-                        //                     size={64}
-
-                        //                 />
-                        //             </TouchableHighlight>
-                        //             <TouchableHighlight
-                        //                 style={styles.icon}
-                        //                 onPress={onChooseCameraPress}
-                        //             >
-                        //                 <Ionicons
-                        //                     name='md-camera'
-                        //                     color='grey'
-                        //                     size={64}
-
-                        //                 />
-                        //             </TouchableHighlight>
-                        //         </React.Fragment>}
-                        // </View>
                     }
                     <View style={styles.formContainer} >
 
@@ -248,25 +211,32 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                                 value={body}
                             />
                         </View>
-                        {category ?
+                    </View>
+                    {category ?
+                        <View style={styles.category}>
                             <Image
                                 source={markerImages[category]}
-                                style={{ width: 50, height: 50 }}
-                            /> :
-                            <EventCategory />}
-                    </View>
-                    {id ? <Button
-                        onPress={() => handleEventCUD('update')}
-                        // style={styles.button}
-                        title="Update"
-                    //color="#841584"
-                    />
-                        : <Button
+                                style={{ width: 50, height: 60, resizeMode: 'contain' }}
+                            />
+                            <Text>{category}</Text>
+                        </View> :
+                        <EventCategory />}
+
+
+                    {id ?
+                        <TouchableOpacity
+                            style={styles.submitButton}
+                            onPress={() => handleEventCUD('update')}
+                        >
+                            <Text style={styles.submitButtonText}> UPDATE </Text>
+                        </TouchableOpacity>
+
+                        : <TouchableOpacity
+                            style={styles.submitButton}
                             onPress={() => handleEventCUD('create')}
-                            // style={styles.button}
-                            title="Create"
-                        //color="#841584"
-                        />
+                        >
+                            <Text style={styles.submitButtonText}> CREATE </Text>
+                        </TouchableOpacity>
                     }
                 </ScrollView>
             </View>
@@ -280,8 +250,17 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
 
         alignContent: 'space-around',
+        justifyContent: 'space-between',
+    },
+    category: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-evenly',
-
+        alignContent: 'center',
+        textAlign: 'center',
+        marginVertical: 10,
+        height: 80
 
 
     },
@@ -289,7 +268,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         paddingTop: 50,
-        width: '80%',
+        paddingHorizontal: 5,
         alignItems: 'center',
         alignContent: "center",
         justifyContent: "space-between"
@@ -348,6 +327,20 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         textAlign: 'center',
     },
+    submitButton: {
+
+        backgroundColor: Colors.primary,
+        padding: 10,
+        margin: 15,
+        height: 40,
+        bottom: 5,
+        textAlign: 'center',
+    },
+    submitButtonText: {
+        color: 'white',
+        textAlign: 'center',
+
+    }
 })
 // import React from 'react'
 // import {

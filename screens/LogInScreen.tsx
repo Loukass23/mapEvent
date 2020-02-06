@@ -28,6 +28,7 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
     return user ?
         (<View style={styles.container}>
             <MenuButton navigation={navigation} />
+            <Text>Log In</Text>
             <Text>Username</Text>
             <Text style={styles.text}>{user.username}</Text>
             <Text>Email</Text>
@@ -40,7 +41,8 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
             >
                 <Text style={styles.submitButtonText}> LOG OUT </Text>
             </TouchableOpacity>
-        </View>) :
+        </View>
+        ) :
         (
             <View style={styles.container}>
                 <MenuButton navigation={navigation} />
@@ -95,12 +97,12 @@ const styles = StyleSheet.create({
         borderWidth: 1
     },
     submitButton: {
-
         backgroundColor: Colors.primary,
         padding: 10,
         margin: 15,
         height: 40,
-        //textAlign: 'center',
+        bottom: 5,
+        textAlign: 'center',
     },
     submitButtonText: {
         color: 'white'
