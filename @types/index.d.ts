@@ -6,7 +6,8 @@ export namespace UserLib {
         username: string,
         firstName: string,
         lastName: string,
-        token: string
+        token: string,
+        avatar?: string
 
     }
     export interface AuthContextInterface {

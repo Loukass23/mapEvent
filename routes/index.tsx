@@ -8,6 +8,7 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 import MenuDrawer from '../components/navigation/MenuDrawer'
 import EventScreen from '../screens/EventScreen';
 import LogInScreen from '../screens/LogInScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 
 export enum ROUTES {
     RootMain = "RootMain",
@@ -33,8 +34,11 @@ const AppDrawerNavigator = createDrawerNavigator({
     Settings: {
         screen: SettingsScreen,
     },
-    LogIn: {
+    Profile: {
         screen: LogInScreen
+    },
+    Register: {
+        screen: RegisterScreen
     }
 
 }, DrawerConfig)

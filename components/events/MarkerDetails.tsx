@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button, ScrollView, ProgressBarAndroid } from 'react-native';
 import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
@@ -13,6 +13,7 @@ import { markerImages } from '../../constants/Markers'
 import { EventContext } from "../../context/EventContext";
 import * as firebase from "firebase";
 import { firebaseConfig } from "../../constants/config";
+import { FirebaseUpload } from "../FirebaseUpload";
 
 
 
@@ -94,7 +95,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
             var metadata = {
                 contentType: 'image/jpeg'
             };
-            const id = `${marker.title}-${marker.category}-${new Date()}`;
+            const id = `${marker.geometry.coordinates[0].toFixed(5)}-${marker.geometry.coordinates[0].toFixed(5)}-${new Date()}`;
 
             const storageRef = firebase
                 .storage()
@@ -108,6 +109,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                 function (snapshot) {
                     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setprogressUpload(progress)
                     console.log('Upload is ' + progress + '% done');
                     switch (snapshot.state) {
                         case firebase.storage.TaskState.PAUSED: // or 'paused'
@@ -122,6 +124,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
 
                 }, () => {
                     uploadTask.snapshot.ref.getDownloadURL().then(img => {
+                        setprogressUpload(0)
                         console.log('File available at', img);
                         handleSetMarker({ ...marker, img })
                     });
@@ -169,97 +172,104 @@ export const MarkerDetails: React.FC<EventLib.Event> =
         const { title, body, geometry, category, id, img } = marker
 
         return (
-            <ScrollView style={styles.container} >
-
-                {img ?
-                    <View>
-                        <Image
-                            source={{ uri: img }}
-                            style={styles.coverImage}
-                            PlaceholderContent={<ActivityIndicator />}
-                        />
-                    </View> :
-                    <View style={styles.photoIcons}>
-                        <TouchableHighlight
-                            onPress={onChooseImagePress}
-                            style={styles.icon}
-                        >
-                            <Ionicons
-
-                                name='md-image'
-                                color='grey'
-                                size={64}
-
+            <View style={styles.container} >
+                <ScrollView>
+                    {img ?
+                        <View style={styles.photo}>
+                            <Image
+                                source={{ uri: img }}
+                                style={styles.coverImage}
+                                PlaceholderContent={<ActivityIndicator />}
                             />
-                            {/* <Icon name="md-arrow-back"
-                    type='ionicons'
-                    color="grey" /> */}
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            style={styles.icon}
-                            onPress={onChooseCameraPress}
-                        >
-                            <Ionicons
-                                name='md-camera'
-                                color='grey'
-                                size={64}
+                        </View> :
+                        <View style={styles.photo}>
+                            <FirebaseUpload type="event" />
+                        </View>
+                        // <View style={styles.photoIcons}>
+                        //     {progressUpload ?
+                        //         <ProgressBarAndroid
+                        //             styleAttr="Horizontal"
+                        //             indeterminate={false}
+                        //             progress={progressUpload}
+                        //         /> :
+                        //         <React.Fragment>
 
+                        //             <TouchableHighlight
+                        //                 onPress={onChooseImagePress}
+                        //                 style={styles.icon}
+                        //             >
+                        //                 <Ionicons
+
+                        //                     name='md-image'
+                        //                     color='grey'
+                        //                     size={64}
+
+                        //                 />
+                        //             </TouchableHighlight>
+                        //             <TouchableHighlight
+                        //                 style={styles.icon}
+                        //                 onPress={onChooseCameraPress}
+                        //             >
+                        //                 <Ionicons
+                        //                     name='md-camera'
+                        //                     color='grey'
+                        //                     size={64}
+
+                        //                 />
+                        //             </TouchableHighlight>
+                        //         </React.Fragment>}
+                        // </View>
+                    }
+                    <View style={styles.formContainer} >
+
+                        <View style={styles.form}>
+                            {eventAddress ? <Text style={styles.address}>
+                                {eventAddress.formatted}</Text> :
+                                <Text>Loading Address</Text>}
+                            <Text style={styles.address}>
+                                lat:{geometry.coordinates[0].toFixed(2)}, long:{geometry.coordinates[1].toFixed(2)}</Text>
+                        </View>
+
+
+                        <View style={styles.form}>
+                            <Text>Title</Text>
+                            <TextInput
+                                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                                onChangeText={title => handleSetMarker({ ...marker, title })}
+                                value={title}
                             />
-                            {/* <Icon name="md-arrow-back"
-                    type='ionicons'
-                    color="grey" /> */}
-                        </TouchableHighlight>
-                    </View>
-                }
-                <View style={styles.formContainer} >
+                        </View>
 
-                    <View style={styles.form}>
-                        {eventAddress ? <Text style={styles.address}>
-                            {eventAddress.formatted}</Text> :
-                            <Text>Loading Address</Text>}
-                        <Text style={styles.address}>
-                            lat:{geometry.coordinates[0].toFixed(2)}, long:{geometry.coordinates[1].toFixed(2)}</Text>
+                        <View style={styles.form}>
+                            <Text>Description</Text>
+                            <TextInput
+                                style={{ height: 80, borderColor: 'gray', borderWidth: 1 }}
+                                onChangeText={body => handleSetMarker({ ...marker, body })}
+                                value={body}
+                            />
+                        </View>
+                        {category ?
+                            <Image
+                                source={markerImages[category]}
+                                style={{ width: 50, height: 50 }}
+                            /> :
+                            <EventCategory />}
                     </View>
-
-
-                    <View style={styles.form}>
-                        <Text>Title</Text>
-                        <TextInput
-                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                            onChangeText={title => handleSetMarker({ ...marker, title })}
-                            value={title}
-                        />
-                    </View>
-
-                    <View style={styles.form}>
-                        <Text>Description</Text>
-                        <TextInput
-                            style={{ height: 80, borderColor: 'gray', borderWidth: 1 }}
-                            onChangeText={body => handleSetMarker({ ...marker, body })}
-                            value={body}
-                        />
-                    </View>
-                    {category ?
-                        <Image
-                            source={markerImages[category]}
-                            style={{ width: 50, height: 50 }}
-                        /> :
-                        <EventCategory />}
-                </View>
-                {id ? <Button
-                    onPress={() => handleEventCUD('update')}
-                    // style={styles.button}
-                    title="Update"
-                //color="#841584"
-                />
-                    : <Button
-                        onPress={() => handleEventCUD('create')}
+                    {id ? <Button
+                        onPress={() => handleEventCUD('update')}
                         // style={styles.button}
-                        title="Create"
+                        title="Update"
                     //color="#841584"
                     />
-                }
-            </ScrollView>
+                        : <Button
+                            onPress={() => handleEventCUD('create')}
+                            // style={styles.button}
+                            title="Create"
+                        //color="#841584"
+                        />
+                    }
+                </ScrollView>
+            </View>
         )
 
     }
@@ -267,11 +277,12 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 5,
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
+        flexDirection: 'column',
+
+        alignContent: 'space-around',
         justifyContent: 'space-evenly',
-        paddingBottom: 20,
-        height
+
+
 
     },
     formContainer: {
@@ -296,11 +307,7 @@ const styles = StyleSheet.create({
     form: {
         width: '100%'
     },
-    bodyText: {
-
-
-    },
-    photoIcons: {
+    photo: {
         height: height / 4,
         flexDirection: 'row',
         justifyContent: 'space-between',

@@ -1,82 +1,98 @@
 import React, { useState, useContext } from 'react'
-import { Image, View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity } from 'react-native'
+import { View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import { Image } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { ImageInfo } from '../@types';
 import MenuButton from '../components/navigation/MenuButton';
 import { ListItem } from 'react-native-elements';
 import { AuthContext } from '../context/AuthContext';
 import Colors from '../constants/Colors';
+import { FirebaseUpload } from '../components/FirebaseUpload';
+
+const { height, width } = Dimensions.get('window');
 
 interface Props {
     navigation: any
 }
 
-const LogInScreen: React.FC<Props> = ({ navigation }) => {
+const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     const { logIn, user, signOut } = useContext(AuthContext)
     console.log('user :', user);
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [avatar, setAvatar] = React.useState('');
 
 
     const handleLogInPress = () => {
         logIn(email.toLowerCase(), password)
 
     }
-
-    return user ?
-        (<View style={styles.container}>
+    return (
+        <View style={styles.container}>
             <MenuButton navigation={navigation} />
-            <Text>Username</Text>
-            <Text style={styles.text}>{user.username}</Text>
-            <Text>Email</Text>
-            <Text style={styles.text}>{user.email}</Text>
-            <Text>Full Name</Text>
-            <Text style={styles.text}>{user.firstName}  {user.lastName}</Text>
+            {avatar ?
+                <View style={styles.photo}>
+                    <Image
+                        source={{ uri: avatar }}
+                        style={styles.coverImage}
+                        PlaceholderContent={<ActivityIndicator />}
+                    />
+                </View> :
+                <View style={styles.photo}>
+                    <FirebaseUpload type="profile" />
+                </View>}
+            <TextInput style={styles.input}
+                autoCompleteType="email"
+                underlineColorAndroid="transparent"
+                placeholder="Email"
+                placeholderTextColor="black"
+                autoCapitalize="none"
+                onChangeText={email => setEmail(email)}
+                value={email}
+            />
+            <TextInput style={styles.input}
+                autoCompleteType="password"
+                underlineColorAndroid="transparent"
+                placeholder="Password"
+                placeholderTextColor="black"
+                autoCapitalize="none"
+                onChangeText={password => setPassword(password)}
+                value={password}
+            />
             <TouchableOpacity
                 style={styles.submitButton}
-                onPress={() => signOut()}
+                onPress={() => handleLogInPress()}
             >
-                <Text style={styles.submitButtonText}> LOG OUT </Text>
+                <Text style={styles.submitButtonText}> LOG IN </Text>
             </TouchableOpacity>
-        </View>) :
-        (
-            <View style={styles.container}>
-                <MenuButton navigation={navigation} />
-                <TextInput style={styles.input}
-                    autoCompleteType="email"
-                    underlineColorAndroid="transparent"
-                    placeholder="Email"
-                    placeholderTextColor="black"
-                    autoCapitalize="none"
-                    onChangeText={email => setEmail(email)}
-                    value={email}
-                />
-                <TextInput style={styles.input}
-                    autoCompleteType="password"
-                    underlineColorAndroid="transparent"
-                    placeholder="Password"
-                    placeholderTextColor="black"
-                    autoCapitalize="none"
-                    onChangeText={password => setPassword(password)}
-                    value={password}
-                />
-                <TouchableOpacity
-                    style={styles.submitButton}
-                    onPress={() => handleLogInPress()}
-                >
-                    <Text style={styles.submitButtonText}> LOG IN </Text>
-                </TouchableOpacity>
-            </View>
-        )
+        </View>
+    )
 }
-export default LogInScreen
+export default RegisterScreen
 
 
 const styles = StyleSheet.create({
     container: {
         paddingTop: 40
+    },
+    photo: {
+        height: height / 4,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        alignContent: 'stretch'
+    },
+    coverImage: {
+        resizeMode: 'center',
+        height: height / 4,
+        width: width,
+        position: 'relative',
+        top: 0,
+        left: 0,
+
+
     },
     input: {
         margin: 15,

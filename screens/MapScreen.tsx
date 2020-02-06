@@ -97,18 +97,17 @@ const MapScreen: FC<Props> = ({ navigation }) => {
         >
             <Callout
                 onPress={() => onAddEventPress()}
-            // onPress={() => this.poiClick(poi)}
+
             >
+
                 <View style={styles.flexAlign}>
                     <Text>Add Event</Text>
                     <Ionicons
+                        onPress={() => onAddEventPress()}
                         name='md-add'
                         color='grey'
                         size={32}
-
                     />
-
-                    {/* <Text>Name: {this.state.poi.name}</Text> */}
                 </View>
             </Callout>
         </Marker>

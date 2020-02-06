@@ -13,6 +13,8 @@ import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from 'react-apollo';
 import AuthContextProvider from './context/AuthContext';
+import { firebaseConfig } from './constants/config';
+import firebase from 'firebase';
 
 
 // const link = new HttpLink({ uri: 'http://localhost:5000/graphq' });
@@ -29,6 +31,7 @@ const App: FC = () => {
 
 
   const _cacheResourcesAsync = async () => {
+    firebase.initializeApp(firebaseConfig);
     await Promise.all([
       Asset.loadAsync([
         require('./assets/images/introAnimationLQ.mp4'),

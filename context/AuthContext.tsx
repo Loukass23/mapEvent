@@ -67,7 +67,8 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
             const token = await SecureStore.getItemAsync('token');
             const date = await SecureStore.getItemAsync('timestamp');
 
-            setUser({ email, username, firstName, lastName, token })
+            if (email && username && firstName && lastName && token)
+                setUser({ email, username, firstName, lastName, token })
 
             console.log('user :', user);
             // const now = new Date()
