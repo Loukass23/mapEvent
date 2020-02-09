@@ -7,7 +7,7 @@ import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import MenuDrawer from '../components/navigation/MenuDrawer'
 import EventScreen from '../screens/EventScreen';
-import LogInScreen from '../screens/LogInScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 
 export enum ROUTES {
@@ -35,7 +35,7 @@ const AppDrawerNavigator = createDrawerNavigator({
         screen: SettingsScreen,
     },
     Profile: {
-        screen: LogInScreen
+        screen: ProfileScreen,
     },
     Register: {
         screen: RegisterScreen

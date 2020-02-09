@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     photo: {
-        height: height / 4,
+        height: height / 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'stretch',
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     },
     coverImage: {
         resizeMode: 'center',
-        height: height / 4,
+        height: height / 5,
         width: width,
         position: 'relative',
         top: 0,

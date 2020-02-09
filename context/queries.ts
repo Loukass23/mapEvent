@@ -13,6 +13,21 @@ export const mutationLogIn = (email: string, pwd: string) => <string>`
 }
         `
 
+
+export const mutationRegister = (avatar: string, email: string, username: string, firstName: string, lastName: string, pwd: string) => <string>`
+ mutation signup{
+    signup(
+      email: "${email}",
+      username: "${username}",
+      firstName: "${firstName}",
+      lastName: "${lastName}",
+      password: "${pwd}",
+      avatar: "${avatar}"
+   
+    )
+}
+        `
+
 export const queryAllEvents = () => <string>`
         {
             events {

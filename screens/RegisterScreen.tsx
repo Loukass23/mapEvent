@@ -17,7 +17,7 @@ interface Props {
 }
 
 const RegisterScreen: React.FC<Props> = ({ navigation }) => {
-    const { logIn, user, signOut } = useContext(AuthContext)
+    const { logIn, user, register, handleSetUser } = useContext(AuthContext)
     console.log('user :', user);
 
     const [email, setEmail] = React.useState('');
@@ -25,7 +25,6 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     const [username, setUsername] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
-    const [avatar, setAvatar] = React.useState('');
 
 
     const handleLogInPress = () => {
@@ -35,12 +34,11 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <MenuButton navigation={navigation} />
-            <Text>Register</Text>
-            {avatar ?
+            {user ?
                 <View style={styles.photo}>
                     <Image
                         resizeMode="contain"
-                        source={{ uri: avatar }}
+                        source={{ uri: user.avatar }}
                         style={styles.coverImage}
                         PlaceholderContent={<ActivityIndicator />}
                     />
@@ -97,7 +95,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             />
             <TouchableOpacity
                 style={styles.submitButton}
-                onPress={() => handleLogInPress()}
+                onPress={() => register(user.avatar, email, username, firstName, lastName, password)}
             >
                 <Text style={styles.submitButtonText}> REGISTER </Text>
             </TouchableOpacity>

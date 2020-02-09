@@ -12,6 +12,8 @@ export namespace UserLib {
     }
     export interface AuthContextInterface {
         logIn(email: string, pwd: string): void,
+        register(avatar: string, email: string, username: string, firstName: string, lastName: string, pwd: string): void,
+        handleSetUser(user: UserLib.User): void,
         signOut(): void,
         user: User
 

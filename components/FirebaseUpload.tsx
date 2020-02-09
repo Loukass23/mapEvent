@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { EventContext } from "../context/EventContext";
 import * as firebase from "firebase";
 import { firebaseConfig } from "../constants/config";
+import { AuthContext } from "../context/AuthContext";
 
 
 
@@ -21,6 +22,7 @@ type Props = {
 export const FirebaseUpload: React.FC<Props> =
     ({ type }) => {
         const { marker, handleSetMarker, } = useContext(EventContext)
+        const { user, handleSetUser, } = useContext(AuthContext)
 
         const [progressUpload, setprogressUpload] = React.useState<number>(0)
 
@@ -76,6 +78,8 @@ export const FirebaseUpload: React.FC<Props> =
             let id: string
             if (type === 'event')
                 id = `${marker.geometry.coordinates[0].toFixed(5)}-${marker.geometry.coordinates[0].toFixed(5)}-${new Date()}`;
+            else if (type === 'profile')
+                id = `user-join-${new Date()}`;
             else id = new Date().getTime().toString()
             const storageRef = firebase
                 .storage()
@@ -107,6 +111,7 @@ export const FirebaseUpload: React.FC<Props> =
                         setprogressUpload(0)
                         console.log('File available at', img);
                         if (type === 'event') handleSetMarker({ ...marker, img })
+                        if (type === 'profile') handleSetUser({ ...user, avatar: img })
                     });
                 });
         }

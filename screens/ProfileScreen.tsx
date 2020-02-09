@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Image, View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity } from 'react-native'
+import { View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Ionicons } from '@expo/vector-icons';
 import { ImageInfo } from '../@types';
@@ -7,7 +7,9 @@ import MenuButton from '../components/navigation/MenuButton';
 import { ListItem } from 'react-native-elements';
 import { AuthContext } from '../context/AuthContext';
 import Colors from '../constants/Colors';
+import { Image } from 'react-native-elements';
 
+const { height, width } = Dimensions.get('window');
 interface Props {
     navigation: any
 }
@@ -16,19 +18,26 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
     const { logIn, user, signOut } = useContext(AuthContext)
     console.log('user :', user);
 
-    const [email, setEmail] = React.useState('');
+    const [emailForm, setEmailForm] = React.useState('');
     const [password, setPassword] = React.useState('');
 
 
     const handleLogInPress = () => {
-        logIn(email.toLowerCase(), password)
-
+        logIn(emailForm.toLowerCase(), password)
     }
 
     return user ?
         (<View style={styles.container}>
+            {user.avatar &&
+                <View style={styles.photo}>
+                    <Image
+                        resizeMode="contain"
+                        source={{ uri: user.avatar }}
+                        style={styles.coverImage}
+                        PlaceholderContent={<ActivityIndicator />}
+                    />
+                </View>}
             <MenuButton navigation={navigation} />
-            <Text>Log In</Text>
             <Text>Username</Text>
             <Text style={styles.text}>{user.username}</Text>
             <Text>Email</Text>
@@ -52,8 +61,8 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
                     placeholder="Email"
                     placeholderTextColor="black"
                     autoCapitalize="none"
-                    onChangeText={email => setEmail(email)}
-                    value={email}
+                    onChangeText={emailForm => setEmailForm(emailForm)}
+                    value={emailForm}
                 />
                 <TextInput style={styles.input}
                     autoCompleteType="password"
@@ -79,6 +88,23 @@ export default LogInScreen
 const styles = StyleSheet.create({
     container: {
         paddingTop: 40
+    },
+    photo: {
+        height: height / 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        alignContent: 'stretch'
+    },
+    coverImage: {
+        resizeMode: 'center',
+        height: height / 4,
+        width: width,
+        position: 'relative',
+        top: 0,
+        left: 0,
+
+
     },
     input: {
         margin: 15,

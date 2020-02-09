@@ -4,7 +4,7 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { UserLib } from '../@types';
 import { serverURL } from '../constants/config'
-import { mutationLogIn } from './queries';
+import { mutationLogIn, mutationRegister } from './queries';
 
 import * as  SecureStore from 'expo-secure-store'
 
@@ -16,8 +16,14 @@ const initAuth: UserLib.AuthContextInterface = {
     logIn: (email: string, pwd: string) => {
         throw new Error('logIn() not implemented');
     },
+    register: (avatar: string, email: string, username: string, firstName: string, lastName: string, pwd: string) => {
+        throw new Error('register() not implemented');
+    },
     signOut: () => {
         throw new Error('signOut() not implemented');
+    },
+    handleSetUser: (user: UserLib.User) => {
+        throw new Error('handleSetUser() not implemented');
     },
     user: null
 
@@ -25,9 +31,11 @@ const initAuth: UserLib.AuthContextInterface = {
 
 export const AuthContext = createContext<UserLib.AuthContextInterface>(initAuth)
 
+type Props = {
+    children: React.ReactNode;
+}
 
-
-const AuthContextProvider = (props: { children: React.ReactNode; }) => {
+const AuthContextProvider = ({ children, navigation }) => {
 
     const [user, setUser] = useState<UserLib.User>()
     useEffect(() => {
@@ -56,6 +64,36 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
         }
 
     }
+    const register = async (avatar: string, email: string, username: string, firstName: string, lastName: string, pwd: string) => {
+        const query = mutationRegister(avatar, email, username, firstName, lastName, pwd)
+        const options = {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                query
+            })
+        };
+        const res = await fetch(serverURL, options)
+        const data = await res.json()
+        if (data.error) console.log('data.error :', data.error);
+        else {
+            console.log('data :', data);
+            const user = {
+                avatar,
+                email,
+                username,
+                firstName,
+                lastName,
+                token: data.data.signup
+            }
+            setUser(user)
+            setStorageToken(user)
+            navigation.navigate('Profile')
+        }
+
+    }
 
     const getStorageToken = async () => {
 
@@ -65,10 +103,11 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
             const firstName = await SecureStore.getItemAsync('firstName');
             const lastName = await SecureStore.getItemAsync('lastName');
             const token = await SecureStore.getItemAsync('token');
+            const avatar = await SecureStore.getItemAsync('avaatar');
             const date = await SecureStore.getItemAsync('timestamp');
 
-            if (email && username && firstName && lastName && token)
-                setUser({ email, username, firstName, lastName, token })
+            if (email && username && firstName && lastName && token && avatar)
+                setUser({ email, username, firstName, lastName, token, avatar })
 
             console.log('user :', user);
             // const now = new Date()
@@ -104,6 +143,7 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
             await SecureStore.setItemAsync('lastName', user.lastName);
             await SecureStore.setItemAsync('token', user.token);
             await SecureStore.setItemAsync('username', user.username);
+            await SecureStore.setItemAsync('avatar', user.avatar);
             await SecureStore.setItemAsync('timestamp', date.toISOString());
         } catch (e) {
             console.log('failed to set storage token', e);
@@ -112,6 +152,9 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
         console.log('set storage token')
     }
 
+    const handleSetUser = (user: UserLib.User) => {
+        setUser(user)
+    }
     const signOut = async () => {
 
         try {
@@ -122,6 +165,7 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
             await SecureStore.deleteItemAsync('token');
             await SecureStore.deleteItemAsync('username');
             await SecureStore.deleteItemAsync('timestamp');
+            await SecureStore.deleteItemAsync('avatar');
             setUser(null)
         } catch (e) {
             console.log('failed to delete storage token', e);
@@ -130,8 +174,8 @@ const AuthContextProvider = (props: { children: React.ReactNode; }) => {
         console.log('deleted storage token')
     }
     return (
-        <AuthContext.Provider value={{ user, logIn, signOut }}>
-            {props.children}
+        <AuthContext.Provider value={{ user, logIn, register, signOut, handleSetUser }}>
+            {children}
         </AuthContext.Provider>
     )
 }
