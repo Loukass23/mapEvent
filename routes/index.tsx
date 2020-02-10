@@ -9,6 +9,7 @@ import MenuDrawer from '../components/navigation/MenuDrawer'
 import EventScreen from '../screens/EventScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import Settings from '../screens/Settings';
 
 export enum ROUTES {
     RootMain = "RootMain",
@@ -39,6 +40,9 @@ const AppDrawerNavigator = createDrawerNavigator({
     },
     Register: {
         screen: RegisterScreen
+    },
+    test: {
+        screen: Settings
     }
 
 }, DrawerConfig)

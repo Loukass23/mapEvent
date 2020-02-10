@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, TouchableHighlight, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Ionicons } from '@expo/vector-icons';
 import { ImageInfo } from '../@types';
@@ -7,8 +7,22 @@ import MenuButton from '../components/navigation/MenuButton';
 import { ListItem } from 'react-native-elements';
 import { AuthContext } from '../context/AuthContext';
 import Colors from '../constants/Colors';
-import { Image } from 'react-native-elements';
+import { Input } from 'react-native-elements'
 
+import {
+    Container,
+    Centered,
+    Left,
+    TextInput,
+    Button,
+    Text,
+    Image,
+    messages,
+    colors,
+    placeholders,
+    routes,
+    buttons,
+} from '../shared';
 const { height, width } = Dimensions.get('window');
 interface Props {
     navigation: any
@@ -27,6 +41,7 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
     }
 
     return user ?
+
         (<View style={styles.container}>
             {user.avatar &&
                 <View style={styles.photo}>
@@ -51,36 +66,94 @@ const LogInScreen: React.FC<Props> = ({ navigation }) => {
                 <Text style={styles.submitButtonText}> LOG OUT </Text>
             </TouchableOpacity>
         </View>
-        ) :
-        (
-            <View style={styles.container}>
-                <MenuButton navigation={navigation} />
-                <TextInput style={styles.input}
-                    autoCompleteType="email"
-                    underlineColorAndroid="transparent"
-                    placeholder="Email"
-                    placeholderTextColor="black"
-                    autoCapitalize="none"
-                    onChangeText={emailForm => setEmailForm(emailForm)}
-                    value={emailForm}
-                />
-                <TextInput style={styles.input}
-                    autoCompleteType="password"
-                    underlineColorAndroid="transparent"
-                    placeholder="Password"
-                    placeholderTextColor="black"
-                    autoCapitalize="none"
-                    onChangeText={password => setPassword(password)}
-                    value={password}
-                />
-                <TouchableOpacity
-                    style={styles.submitButton}
-                    onPress={() => handleLogInPress()}
-                >
-                    <Text style={styles.submitButtonText}> LOG IN </Text>
-                </TouchableOpacity>
-            </View>
         )
+        :
+        (
+
+
+            <Container>
+                {/* <MenuButton navigation={navigation} /> */}
+
+                {/* <Left></Left> */}
+                <Centered>
+
+                    <TextInput placeholder={placeholders.email}
+                        //         placeholder="Email"
+                        onChangeText={emailForm => setEmailForm(emailForm)}
+                        value={emailForm}
+
+                    />
+
+                    <TextInput placeholder={placeholders.password} password
+                        onChangeText={password => setPassword(password)}
+                        value={password} />
+
+                    {/* <Text color={colors.dark} onPress={() => navigate(routes.forget)}>
+                        {messages.forget}
+                    </Text> */}
+                </Centered>
+                <Centered>
+                    {/* <Text onPress={() => navigate(routes.register)}>
+                        {messages.register}
+                    </Text> */}
+                    <Button onPress={() => handleLogInPress()}>
+                        <Text color={colors.bright}>{buttons.login}</Text>
+                    </Button>
+                </Centered>
+            </Container>
+
+
+
+
+            // <Container>
+            // <Centered>
+            //     <TextInput
+            //         placeholder="Email"
+            //         onChangeText={emailForm => setEmailForm(emailForm)}
+            //         value={emailForm}
+
+            //     />
+            //     <TextInput
+            //         placeholder="Password"
+            //         onChangeText={password => setPassword(password)}
+            //         value={password} />
+            //     <Button
+            //         onPress={() => handleLogInPress()}
+            //     >
+            //         LOG IN
+            //     </Button>
+            // </Centered>
+            // </Container>
+        )
+    // (
+    //     <View style={styles.container}>
+    //         <MenuButton navigation={navigation} />
+    //         <Input style={styles.input}
+    //             autoCompleteType="email"
+    //             underlineColorAndroid="transparent"
+    //             placeholder="Email"
+    //             placeholderTextColor="black"
+    //             autoCapitalize="none"
+    //             onChangeText={emailForm => setEmailForm(emailForm)}
+    //             value={emailForm}
+    //         />
+    //         <Input style={styles.input}
+    //             autoCompleteType="password"
+    //             underlineColorAndroid="transparent"
+    //             placeholder="Password"
+    //             placeholderTextColor="black"
+    //             autoCapitalize="none"
+    //             onChangeText={password => setPassword(password)}
+    //             value={password}
+    //         />
+    //         <TouchableOpacity
+    //             style={styles.submitButton}
+    //             onPress={() => handleLogInPress()}
+    //         >
+    //             <Text style={styles.submitButtonText}> LOG IN </Text>
+    //         </TouchableOpacity>
+    //     </View>
+    //)
 }
 export default LogInScreen
 
