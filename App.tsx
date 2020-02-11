@@ -6,8 +6,8 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import LocationContextProvider from './context/LocationContext'
 import EventContextProvider from './context/EventContext'
-import AppContainer from './routes';
-import { AppRegistry } from 'react-native';
+import AppContainer from './AppContainer';
+// import { AppRegistry } from 'react-native';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
@@ -72,7 +72,7 @@ const App: FC = () => {
     );
 }
 
-AppRegistry.registerComponent('MapEvent', () => App);
+// AppRegistry.registerComponent('MapEvent', () => App);
 
 export default App
 

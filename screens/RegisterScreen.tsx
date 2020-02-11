@@ -1,11 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { View, Button, StyleSheet, Text, TouchableHighlight, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Dimensions, KeyboardAvoidingView } from 'react-native'
-import * as ImagePicker from 'expo-image-picker'
 import { Image } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
-import { ImageInfo } from '../@types';
 import MenuButton from '../components/navigation/MenuButton';
-import { ListItem } from 'react-native-elements';
 import { AuthContext } from '../context/AuthContext';
 import Colors from '../constants/Colors';
 import { FirebaseUpload } from '../components/FirebaseUpload';

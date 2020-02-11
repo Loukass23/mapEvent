@@ -13,7 +13,7 @@ import { markerImages } from '../../constants/Markers'
 import { EventContext } from "../../context/EventContext";
 import * as firebase from "firebase";
 import { firebaseConfig } from "../../constants/config";
-import { FirebaseUpload } from "../FirebaseUpload";
+import { FirebaseUpload } from "../../components/FirebaseUpload";
 
 
 

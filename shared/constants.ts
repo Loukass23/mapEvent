@@ -22,7 +22,8 @@ export const colors = {
 
 export const buttons = {
   login: 'Sign in',
-  logout: 'Sing out',
+  logout: 'Sign out',
+  register: 'Register',
   code: 'Send code',
   confirm: 'Confirm',
   send: 'Send code',
@@ -31,6 +32,8 @@ export const buttons = {
 
 export const placeholders = {
   username: 'Username',
+  firstName: 'Fist Name',
+  lastName: 'Last Name',
   password: 'Password',
   code: 'Confirmation code',
   oldPassword: 'Old password',

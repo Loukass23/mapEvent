@@ -35,7 +35,7 @@ type Props = {
     children: React.ReactNode;
 }
 
-const AuthContextProvider = ({ children, navigation }) => {
+const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState<UserLib.User>()
     useEffect(() => {
@@ -90,7 +90,6 @@ const AuthContextProvider = ({ children, navigation }) => {
             }
             setUser(user)
             setStorageToken(user)
-            navigation.navigate('Profile')
         }
 
     }

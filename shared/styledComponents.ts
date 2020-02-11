@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import { colors } from './constants';
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -16,15 +16,29 @@ export const Centered = styled.View`
   justify-content: center;
   background-color: ${colors.creamy};
 `;
+export const TopCentered = styled.View`
+  flex: 1;
+  align-content: flex-start;
+  justify-content: flex-start;
+  background-color: ${colors.creamy};
+`;
 
 export const Left = styled.View`
-  align-items: center;
-  justify-content: center;
+  width: ${width}px;
+  height: 50px;
+  justify-content: flex-start;
   background-color: ${colors.creamy};
 `;
 
 export const FlexCentered = styled(Centered)`
   flex: 1;
+`;
+
+export const RotatedBox = styled.View`
+  transform: rotate(90deg);
+  text-shadow-offset: 10px 5px;
+  font-variant: small-caps;
+  margin: 5px 7px 2px;
 `;
 
 export const TextInput = styled.TextInput.attrs(props => ({

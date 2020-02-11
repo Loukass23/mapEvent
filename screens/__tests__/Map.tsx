@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import MapScreen from '../MapScreen';
+import Map from '../Map';
 import renderer from 'react-test-renderer';
 
 
@@ -8,7 +8,7 @@ import renderer from 'react-test-renderer';
 describe('TestMap', () => {
     it('renders correctly', () => {
         const map = renderer.create(
-            <MapScreen />
+            <Map />
         ).toJSON();
         expect(map).toMatchSnapshot();
     });

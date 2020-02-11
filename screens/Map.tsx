@@ -8,7 +8,7 @@ import ClusterMarker from '../components/clusters/ClusterMarker';
 import { getCluster } from '../components/clusters/MapUtils';
 import { markerImages } from '../constants/Markers';
 import Colors from '../constants/Colors';
-import { MarkerDetails } from '../components/events/MarkerDetails';
+// import { MarkerDetails, OnMapMessage, } from '.';
 import { pick } from 'lodash';
 import MenuButton from '../components/navigation/MenuButton';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +19,8 @@ import {
     NavigationState,
 } from 'react-navigation';
 import ApolloClient from 'apollo-client';
-import { OnMapMessage } from '../components/events/OnMapMessage';
+import { OnMapMessage } from './events/OnMapMessage';
+import { MarkerDetails } from './events/MarkerDetails';
 
 
 
@@ -33,7 +34,7 @@ interface Props {
 const { width, height } = Dimensions.get('window');
 
 
-const MapScreen: FC<Props> = ({ navigation }) => {
+const Map: FC<Props> = ({ navigation }) => {
 
     const { userRegion, _getLocationAsync } = useContext<LocationLib.UserLocation>(LocationContext)
     const { events, getAllEvents, getEventsByRadius, loading, radius,
@@ -241,7 +242,7 @@ const MapScreen: FC<Props> = ({ navigation }) => {
 
 }
 // export default graphql(getAllEvents)(MapScreen)
-export default MapScreen
+export default Map
 
 const FadeInView = (props) => {
     const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
