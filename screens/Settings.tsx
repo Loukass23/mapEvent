@@ -2,7 +2,7 @@ import {
   Container,
   Button,
   Text,
-  TextInput,
+  Left,
   Centered,
   TopCentered,
 } from '../shared/styledComponents';
@@ -15,7 +15,7 @@ import { EventContext } from "../context/EventContext";
 import { AuthContext } from "../context/AuthContext";
 // import { Colors } from "react-native/Libraries/NewAppScreen";
 const { height, width } = Dimensions.get('window');
-
+import { titles } from '../shared'
 
 interface Props {
   navigation: any
@@ -27,12 +27,18 @@ export const Settings: FC<Props> = ({ navigation }) => {
 
   return (
     <Container>
-      <MenuButton navigation={navigation} />
       <Centered>
-        <Text>Settings</Text>
+        <Left>
+          <MenuButton navigation={navigation} />
+        </Left>
       </Centered>
+      <Container>
+        <TopCentered>
+          <Centered>
+            <Text>{titles.settings}</Text>
+          </Centered>
 
-      {/* <View style={styles.welcomeContainer} >
+          {/* <View style={styles.welcomeContainer} >
               <CheckboxFormX
                 iconColor={Colors.primary}
                 style={{ width: '90%', height: 40 }}
@@ -45,22 +51,22 @@ export const Settings: FC<Props> = ({ navigation }) => {
                 onChecked={(item) => this._onSelect(item)}
               />
             </View> */}
-      <Centered>
-        <TopCentered>
-          <Text>Radius: {radius}m</Text>
-          <Slider
-            onValueChange={(radius) => handleSetRadius(radius)}
-            style={styles.slider}
-            value={radius}
-            step={50}
-            minimumValue={5}
-            maximumValue={10000}
-            minimumTrackTintColor="#000000"
-          // maximumTrackTintColor={Colors.primary}
-          />
+          <Centered>
+            <Text>Radius: {radius}m</Text>
+            <Slider
+              onValueChange={(radius) => handleSetRadius(radius)}
+              style={styles.slider}
+              value={radius}
+              step={50}
+              minimumValue={5}
+              maximumValue={10000}
+              minimumTrackTintColor="#000000"
+            // maximumTrackTintColor={Colors.primary}
+            />
+          </Centered>
         </TopCentered>
-      </Centered>
-    </Container>
+      </Container>
+    </Container >
   );
 };
 export default Settings

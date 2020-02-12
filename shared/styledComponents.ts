@@ -16,6 +16,18 @@ export const Centered = styled.View`
   justify-content: center;
   background-color: ${colors.creamy};
 `;
+export const Title = styled.View`
+  zIndex: 0;
+  position: absolute;
+  top: 0;
+  width: ${width}px;
+  flex: 1;
+  alignSelf: center;
+  alignContent: center;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.grey};
+`;
 export const TopCentered = styled.View`
   flex: 1;
   align-content: flex-start;
@@ -27,6 +39,17 @@ export const Left = styled.View`
   width: ${width}px;
   height: 50px;
   justify-content: flex-start;
+  background-color: ${colors.creamy};
+`;
+export const FullWidth = styled.View`
+  width: ${width * 0.9}px;
+  height: 55px;
+  padding: 16px;
+  border-radius: 30px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  margin-top: 16px;
   background-color: ${colors.creamy};
 `;
 

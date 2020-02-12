@@ -142,7 +142,7 @@ const AuthContextProvider = ({ children }) => {
             await SecureStore.setItemAsync('lastName', user.lastName);
             await SecureStore.setItemAsync('token', user.token);
             await SecureStore.setItemAsync('username', user.username);
-            await SecureStore.setItemAsync('avatar', user.avatar);
+            if (user.avatar) await SecureStore.setItemAsync('avatar', user.avatar);
             await SecureStore.setItemAsync('timestamp', date.toISOString());
         } catch (e) {
             console.log('failed to set storage token', e);

@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { View, StyleSheet, TouchableHighlight, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import { AuthContext } from '../../context/AuthContext';
 import Colors from '../../constants/Colors';
-//import { Input } from 'react-native-elements'
+import { Image, Avatar } from 'react-native-elements'
 
 import {
     Container,
@@ -10,20 +10,21 @@ import {
     TopCentered,
     Left,
     TextInput,
+    Title,
     Button,
     Text,
-    messages,
+    titles,
     colors,
     placeholders,
     routes,
     buttons,
     RotatedBox
 } from '../../shared';
+import { FirebaseUpload } from '../../components/FirebaseUpload';
+// import { FirebaseUpload } from '../../components';
 const { height, width } = Dimensions.get('window');
-interface Props {
-}
 
-const SignUp: React.FC<Props> = () => {
+const SignUp: React.FC = () => {
     const { user, register } = useContext(AuthContext)
     console.log('user :', user);
 
@@ -32,12 +33,42 @@ const SignUp: React.FC<Props> = () => {
     const [username, setUsername] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
+    const [avatar, setAvatar] = React.useState('');
+
+    useEffect(() => {
+        if (user?.avatar) setAvatar(user.avatar)
+    }, [user])
 
 
 
     return (
 
         <TopCentered>
+            <Title>
+                <Text>{titles.register}</Text>
+            </Title>
+            {avatar ?
+                <Centered>
+
+                    <Avatar
+                        rounded
+                        size="xlarge"
+                        activeOpacity={0.7}
+                        source={{ uri: avatar }}
+                        showEditButton={true}
+                    />
+                    {/* <Image
+                        resizeMode="contain"
+                        source={{ uri: avatar }}
+                        style={styles.coverImage}
+                        PlaceholderContent={<ActivityIndicator />}
+                    /> */}
+                </Centered> :
+                <View style={styles.photo}
+
+                >
+                    <FirebaseUpload type="profile" />
+                </View>}
             <TextInput placeholder={placeholders.email}
                 onChangeText={emailForm => setEmailForm(emailForm)}
                 value={emailForm}
@@ -68,3 +99,55 @@ const SignUp: React.FC<Props> = () => {
 }
 export default SignUp
 
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: 40
+    },
+    photo: {
+        height: height / 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        alignContent: 'stretch'
+    },
+    coverImage: {
+        resizeMode: 'center',
+        height: height / 4,
+        width: width,
+        position: 'relative',
+        top: 0,
+        left: 0,
+
+
+    },
+    input: {
+        margin: 15,
+        height: 40,
+        borderColor: Colors.primary,
+        borderWidth: 1,
+        paddingLeft: 5
+    },
+    text: {
+        padding: 10,
+        textAlign: 'center',
+        margin: 15,
+        height: 40,
+        borderColor: Colors.secondary,
+        color: 'black',
+        borderWidth: 1
+    },
+    submitButton: {
+
+        backgroundColor: Colors.primary,
+        padding: 10,
+        margin: 15,
+        height: 40,
+        bottom: 5,
+        textAlign: 'center',
+    },
+    submitButtonText: {
+        color: 'white',
+        textAlign: 'center'
+    }
+})

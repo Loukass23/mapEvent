@@ -12,7 +12,7 @@ import {
     TextInput,
     Button,
     Text,
-    Image,
+    titles,
     messages,
     colors,
     placeholders,
@@ -40,6 +40,10 @@ const SignIn: React.FC<Props> = () => {
     return (
 
         <TopCentered>
+            <Centered>
+                <Text>{titles.login}</Text>
+            </Centered>
+
             <TextInput placeholder={placeholders.email}
                 onChangeText={emailForm => setEmailForm(emailForm)}
                 value={emailForm}

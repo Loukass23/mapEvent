@@ -1,15 +1,17 @@
 export const titles = {
   login: 'Sign in',
-  register: 'Sign up',
+  register: 'Register',
   confirm: 'Confirm user',
   forget: 'Forget password',
   newPassword: 'New password',
+  settings: 'Settings',
+  profile: 'Profile'
 };
 
 export const messages = {
   forget: 'Forget password ?',
   register: 'Create an account',
-  already: 'Already a member ?',
+  already: 'Already a member ? Log in instead',
 };
 
 export const colors = {
@@ -47,6 +49,7 @@ export const routes = {
   app: 'App',
   loader: 'Loading',
   profile: 'Profile',
+  settings: 'Settings',
   register: 'SignUp',
   confirm: 'ConfirmSignUp',
   login: 'SignIn',

@@ -12,13 +12,14 @@ import {
     TextInput,
     Button,
     Text,
-    Image,
+    FullWidth,
     messages,
     colors,
     placeholders,
     routes,
     buttons,
-    RotatedBox
+    RotatedBox,
+    titles
 } from '../../shared';
 const { height, width } = Dimensions.get('window');
 interface Props {
@@ -28,28 +29,39 @@ const UserInfo: React.FC<Props> = () => {
     const { user, signOut } = useContext(AuthContext)
 
 
+    const initials = user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase()
 
 
     return (
-
         <TopCentered>
-            {user.avatar &&
-                <Avatar
-                    source={{ uri: user.avatar }}
-                // showEditButton={true}
-                />
-            }
-            <Text > {user.email}</Text>
-            <Text > {user.username}</Text>
-            <Text > {user.firstName} {user.lastName}</Text>
+            <Centered>
+                <Text>{titles.profile}</Text>
+            </Centered>
+            <Centered>
+                {user.avatar ?
+                    <Avatar
+                        rounded
+                        size="xlarge"
+                        activeOpacity={0.7}
+                        source={{ uri: user.avatar }}
 
+                    /> :
+                    <Avatar
+                        rounded
+                        size="xlarge"
+                        title={initials}
+                        activeOpacity={0.7}
 
+                    />
+                }</Centered>
+            <FullWidth><Text>email: {user.email}</Text></FullWidth>
+            <FullWidth><Text>username: {user.username}</Text></FullWidth>
+            <FullWidth><Text>full name: {user.firstName} {user.lastName}</Text></FullWidth>
             <Button
                 onPress={() => signOut()}
             >
                 <Text color={colors.bright}>{buttons.logout}</Text>
             </Button>
-
         </TopCentered>
     )
 }

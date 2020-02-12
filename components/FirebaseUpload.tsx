@@ -25,6 +25,7 @@ export const FirebaseUpload: React.FC<Props> =
         const { user, handleSetUser, } = useContext(AuthContext)
 
         const [progressUpload, setprogressUpload] = React.useState<number>(0)
+        const [uploading, setUploading] = React.useState<boolean>(false)
 
 
         const onChooseImagePress = async () => {
@@ -48,8 +49,7 @@ export const FirebaseUpload: React.FC<Props> =
             });
 
             if (!result.cancelled) {
-                console.log(result);
-
+                setUploading(true)
                 imageUpload(result)
                 //     .then(() => {
                 //         Alert.alert("Success");
@@ -108,6 +108,7 @@ export const FirebaseUpload: React.FC<Props> =
 
                 }, () => {
                     uploadTask.snapshot.ref.getDownloadURL().then(img => {
+                        setUploading(false)
                         setprogressUpload(0)
                         console.log('File available at', img);
                         if (type === 'event') handleSetMarker({ ...marker, img })
@@ -117,7 +118,7 @@ export const FirebaseUpload: React.FC<Props> =
         }
         return (
             <View style={styles.container} >
-                {progressUpload ?
+                {uploading ?
                     <React.Fragment>
                         <ProgressBarAndroid
                             style={{ padding: 10 }}

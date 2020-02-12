@@ -1,8 +1,9 @@
 import { createSwitchNavigator } from 'react-navigation';
 
-import { Loading } from '../screens';
-import AuthStack from './AuthStack';
+import { Loading, Map } from '../screens';
+// import AuthStack from './AuthStack';
 import AppStack from './AppStack';
+// import AppDrawer from './AppDrawer';
 
 const RootStack = createSwitchNavigator(
   {

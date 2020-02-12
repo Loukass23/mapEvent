@@ -42,7 +42,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                 </Left>
             </Centered>
 
-            {user ?
+            {user?.token ?
                 <Container>
                     <UserInfo />
                 </Container>
