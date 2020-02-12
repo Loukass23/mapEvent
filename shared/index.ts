@@ -8,11 +8,13 @@ export {
 } from './constants';
 export {
   Container,
+  ContainerRow,
   FullWidth,
   TopCentered,
   Centered,
   TextInput,
-  Title,
+  MapMessage,
+  TextSmall,
   Button,
   Text,
   Left,

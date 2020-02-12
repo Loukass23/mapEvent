@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, FC } from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableHighlight, Animated, Easing } from 'react-native';
+import { StyleSheet, View, Dimensions, TouchableHighlight, Animated, Easing } from 'react-native';
 import MapView, { Region, Marker, Callout, MapEvent, Circle } from 'react-native-maps';
 import { LocationContext } from '../context/LocationContext'
 import { EventContext, } from '../context/EventContext'
@@ -21,7 +21,7 @@ import {
 import ApolloClient from 'apollo-client';
 import { OnMapMessage } from './events/OnMapMessage';
 import { MarkerDetails } from './events/MarkerDetails';
-
+import { Text, Container } from '../shared'
 
 
 interface Props {
@@ -201,15 +201,18 @@ const Map: FC<Props> = ({ navigation }) => {
 
                 </MapView>
 
-                <View style={styles.loading}>
-                    {loading ? <OnMapMessage message={"Loading Events"} /> :
-                        < OnMapMessage message={`${events.length} found`} />
-                    }
-                </View>
-
-
+                {/* <View style={styles.loading}>
+                   
+                </View> */}
 
                 <MenuButton navigation={navigation} />
+                {loading ? <OnMapMessage message={"Loading Events"} /> :
+                    < OnMapMessage message={`${events.length} events found`} />
+                }
+
+
+
+
             </View>
         )
     else return (

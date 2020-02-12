@@ -10,29 +10,40 @@ export const Container = styled.SafeAreaView`
   justify-content: space-between;
   background-color: ${colors.creamy};
 `;
+export const ContainerRow = styled.SafeAreaView`
+  flex: 1;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  padding: 16px;
+  justify-content: space-between;
+  opacity: 0.7;
+  background-color: ${colors.creamy};
+`;
 
 export const Centered = styled.View`
   align-items: center;
   justify-content: center;
   background-color: ${colors.creamy};
 `;
-export const Title = styled.View`
+export const MapMessage = styled.View`
   zIndex: 0;
   position: absolute;
-  top: 0;
+  margin-top: 12px;
+  height: 38px
   width: ${width}px;
-  flex: 1;
-  alignSelf: center;
+  flex-direction: column;
+  flex-wrap: wrap;
   alignContent: center;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.grey};
 `;
 export const TopCentered = styled.View`
   flex: 1;
   align-content: flex-start;
   justify-content: flex-start;
   background-color: ${colors.creamy};
+
 `;
 
 export const Left = styled.View`
@@ -99,5 +110,11 @@ export const Button = styled.TouchableOpacity`
 export const Text = styled.Text`
   font-size: 18px;
   font-weight: 500;
+  color: ${props => (props.color ? props.color : colors.dark)};
+`;
+export const TextSmall = styled.Text`
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px;
   color: ${props => (props.color ? props.color : colors.dark)};
 `;
