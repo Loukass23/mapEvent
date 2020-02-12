@@ -5,12 +5,11 @@ import Colors from '../../constants/Colors';
 import { Image, Avatar } from 'react-native-elements'
 
 import {
-    Container,
+
     Centered,
     TopCentered,
     Left,
     TextInput,
-    Title,
     Button,
     Text,
     titles,
@@ -44,9 +43,9 @@ const SignUp: React.FC = () => {
     return (
 
         <TopCentered>
-            <Title>
+            <Centered>
                 <Text>{titles.register}</Text>
-            </Title>
+            </Centered>
             {avatar ?
                 <Centered>
 

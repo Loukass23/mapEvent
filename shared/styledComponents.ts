@@ -27,7 +27,6 @@ export const Centered = styled.View`
   background-color: ${colors.creamy};
 `;
 export const MapMessage = styled.View`
-  zIndex: 0;
   position: absolute;
   margin-top: 12px;
   height: 38px
@@ -73,6 +72,17 @@ export const RotatedBox = styled.View`
   text-shadow-offset: 10px 5px;
   font-variant: small-caps;
   margin: 5px 7px 2px;
+`;
+export const Cluster = styled.View`
+  flex: 1;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+ background-color: ${colors.creamy};
+  border: 5px solid ${colors.blue};
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
 `;
 
 export const TextInput = styled.TextInput.attrs(props => ({

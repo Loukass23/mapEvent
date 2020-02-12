@@ -16,6 +16,7 @@ import { AuthContext } from "../context/AuthContext";
 // import { Colors } from "react-native/Libraries/NewAppScreen";
 const { height, width } = Dimensions.get('window');
 import { titles } from '../shared'
+import { EventCategory } from '.';
 
 interface Props {
   navigation: any
@@ -63,6 +64,9 @@ export const Settings: FC<Props> = ({ navigation }) => {
               minimumTrackTintColor="#000000"
             // maximumTrackTintColor={Colors.primary}
             />
+          </Centered>
+          <Centered>
+            {/* <EventCategory /> */}
           </Centered>
         </TopCentered>
       </Container>

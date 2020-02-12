@@ -1,8 +1,8 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableHighlight, TextInput, Button, ScrollView, ProgressBarAndroid, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, ImageBackground, Dimensions, TouchableHighlight, ScrollView, ProgressBarAndroid, TouchableOpacity } from 'react-native';
 import { EventLib } from '../../@types/index'
 import { ActivityIndicator } from 'react-native';
-import { Image } from 'react-native-elements';
+import { Image, Avatar } from 'react-native-elements';
 import Colors from "../../constants/Colors";
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'
@@ -15,7 +15,24 @@ import * as firebase from "firebase";
 import { firebaseConfig } from "../../constants/config";
 import { FirebaseUpload } from "../../components/FirebaseUpload";
 
-
+import {
+    Container,
+    Centered,
+    TopCentered,
+    Left,
+    TextInput,
+    Button,
+    Text,
+    titles,
+    colors,
+    placeholders,
+    routes,
+    buttons,
+    RotatedBox,
+    messages,
+    ContainerRow,
+    TextSmall
+} from '../../shared';
 
 const { height, width } = Dimensions.get('window');
 
@@ -168,78 +185,83 @@ export const MarkerDetails: React.FC<EventLib.Event> =
 
         const { title, body, geometry, category, id, img } = marker
 
+
         return (
-            <View style={styles.container} >
-                <ScrollView>
-                    {img ?
-                        <View style={styles.photo}>
-                            <Image
-                                source={{ uri: img }}
-                                style={styles.coverImage}
-                                PlaceholderContent={<ActivityIndicator />}
-                            />
-                        </View> :
-                        <View style={styles.photo}>
-                            <FirebaseUpload type="event" />
-                        </View>
-                    }
-                    <View style={styles.formContainer} >
+            <Container>
 
-                        <View style={styles.form}>
-                            {eventAddress ? <Text style={styles.address}>
-                                {eventAddress.formatted}</Text> :
-                                <Text>Loading Address</Text>}
-                            <Text style={styles.address}>
-                                lat:{geometry.coordinates[0].toFixed(2)}, long:{geometry.coordinates[1].toFixed(2)}</Text>
-                        </View>
-
-
-                        <View style={styles.form}>
-                            <Text>Title</Text>
-                            <TextInput
-                                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                                onChangeText={title => handleSetMarker({ ...marker, title })}
-                                value={title}
-                            />
-                        </View>
-
-                        <View style={styles.form}>
-                            <Text>Description</Text>
-                            <TextInput
-                                style={{ height: 80, borderColor: 'gray', borderWidth: 1 }}
-                                onChangeText={body => handleSetMarker({ ...marker, body })}
-                                value={body}
-                            />
-                        </View>
+                {img ?
+                    <View style={styles.photo}>
+                        <Image
+                            source={{ uri: img }}
+                            style={styles.coverImage}
+                            PlaceholderContent={<ActivityIndicator />}
+                        />
+                    </View> :
+                    <View style={styles.photo}>
+                        <FirebaseUpload type="event" />
                     </View>
+                }
+                <Container >
+
+                    <Container>
+                        {eventAddress ? <TextSmall>
+                            {eventAddress.formatted}</TextSmall> :
+                            <TextSmall>Loading Address</TextSmall>}
+                        <TextSmall>
+                            lat:{geometry.coordinates[0].toFixed(2)}, long:{geometry.coordinates[1].toFixed(2)}
+                        </TextSmall>
+                    </Container>
+
+
+                    <Centered>
+
+                        <Text>Title</Text>
+
+                        <TextInput
+                            style={{ borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={title => handleSetMarker({ ...marker, title })}
+                            value={title}
+                        />
+                    </Centered>
+
+                    <Centered>
+                        <Text>Description</Text>
+                        <TextInput
+                            style={{ height: 80, borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={body => handleSetMarker({ ...marker, body })}
+                            value={body}
+                        />
+                    </Centered>
+
                     {category ?
-                        <View style={styles.category}>
-                            <Image
+                        <Centered >
+                            <Avatar
+                                rounded
+                                size="large"
+                                activeOpacity={0.7}
                                 source={markerImages[category]}
-                                style={{ width: 50, height: 60, resizeMode: 'contain' }}
+                                showEditButton={true}
                             />
                             <Text>{category}</Text>
-                        </View> :
+                        </Centered> :
                         <EventCategory />}
+                </Container>
 
+                {id ?
+                    <Button
+                        onPress={() => handleEventCUD('update')}
+                    >
+                        <Text> {buttons.update} </Text>
+                    </Button>
 
-                    {id ?
-                        <TouchableOpacity
-                            style={styles.submitButton}
-                            onPress={() => handleEventCUD('update')}
-                        >
-                            <Text style={styles.submitButtonText}> UPDATE </Text>
-                        </TouchableOpacity>
+                    : <Button
+                        onPress={() => handleEventCUD('create')}
+                    >
+                        <Text> {buttons.create} </Text>
+                    </Button>
+                }
 
-                        : <TouchableOpacity
-                            style={styles.submitButton}
-                            onPress={() => handleEventCUD('create')}
-                        >
-                            <Text style={styles.submitButtonText}> CREATE </Text>
-                        </TouchableOpacity>
-                    }
-                </ScrollView>
-            </View>
+            </Container>
         )
 
     }

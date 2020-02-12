@@ -8,6 +8,7 @@ export {
 } from './constants';
 export {
   Container,
+  Cluster,
   ContainerRow,
   FullWidth,
   TopCentered,

@@ -1,10 +1,11 @@
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
-import { Map, Profile, Settings } from '../screens';
+import { Map, Settings } from '../screens';
 import { tabOptions } from '../utils/options';
 import { Dimensions } from 'react-native';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
+import Profile from '../screens/Profile';
 // import MenuDrawer from '../components/navigation/MenuDrawer';
 
 // const AppStack = createMaterialTopTabNavigator(

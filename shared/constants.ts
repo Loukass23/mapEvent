@@ -30,6 +30,8 @@ export const buttons = {
   confirm: 'Confirm',
   send: 'Send code',
   resend: 'Resend code',
+  create: 'Create',
+  update: 'Update',
 };
 
 export const placeholders = {
