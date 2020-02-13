@@ -1,41 +1,29 @@
-import React from 'react'
-import { StyleSheet, TouchableHighlight } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
+import React, { useContext, FC } from 'react'
 import { Icon } from 'react-native-elements';
-const MenuButton = ({ navigation }) => {
+import { ActionButton } from '../../shared';
+import { EventContext } from '../../context/EventContext';
+
+interface Props {
+    navigation: any,
+    icon: string,
+    left: string
+}
+
+const MenuButton: FC<Props> = ({ navigation, icon, left }) => {
+    const { handleSetMarker } = useContext(EventContext)
+    const action = () => icon === 'menu' ? navigation.toggleDrawer() : handleSetMarker(null)
+
     return (
-        // <Ionicons
-        //     style={styles.menuIcon}
-        //     name='md-menu'
-        //     color='grey'
-        //     size={32}
-        //     onPress={() => navigation.toggleDrawer()}
-        // />
-        <TouchableHighlight
-            onPress={() => navigation.toggleDrawer()}
-            style={styles.menuIcon}
+
+        <ActionButton
+            left={left}
+            onPress={() => action()}
         >
-            <Icon name="menu"
+            <Icon name={icon}
                 color="grey" />
 
-        </TouchableHighlight>
+        </ActionButton>
     )
 }
 
 export default MenuButton
-
-const styles = StyleSheet.create({
-    menuIcon: {
-        zIndex: 0,
-        backgroundColor: 'rgba(250, 250, 250, .8)',
-        position: 'absolute',//use absolute position to show button on top of the map
-        top: 10, //for center align
-        left: 10,
-        width: 40,
-        height: 40,
-        alignSelf: 'center',
-        borderRadius: 3,
-        alignContent: 'center',
-        justifyContent: 'center'
-    }
-})

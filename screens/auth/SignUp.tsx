@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { View, StyleSheet, TouchableHighlight, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import { AuthContext } from '../../context/AuthContext';
 import Colors from '../../constants/Colors';
-import { Image, Avatar } from 'react-native-elements'
+import { Avatar } from 'react-native-elements'
 
 import {
 
@@ -84,7 +84,7 @@ const SignUp: React.FC = () => {
                 onChangeText={lastName => setLastName(lastName)}
                 value={lastName}
             />
-            <TextInput placeholder={placeholders.password} password
+            <TextInput placeholder={placeholders.password}
                 onChangeText={password => setPassword(password)}
                 value={password} />
             <Button

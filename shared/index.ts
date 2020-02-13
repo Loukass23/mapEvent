@@ -7,6 +7,7 @@ export {
   buttons,
 } from './constants';
 export {
+  ActionButton,
   Container,
   Cluster,
   ContainerRow,

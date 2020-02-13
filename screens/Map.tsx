@@ -21,7 +21,7 @@ import {
 import ApolloClient from 'apollo-client';
 import { OnMapMessage } from './events/OnMapMessage';
 import { MarkerDetails } from './events/MarkerDetails';
-import { Text, Container } from '../shared'
+import { Text, Container, TopCentered } from '../shared'
 
 
 interface Props {
@@ -40,6 +40,7 @@ const Map: FC<Props> = ({ navigation }) => {
     const { events, getAllEvents, getEventsByRadius, loading, radius,
         handleSetMarker, marker } = useContext(EventContext)
     const [region, setRegion] = useState<Region | undefined>(userRegion);
+    const [messageShow, setMessageShow] = useState<boolean>(false);
 
     useEffect(() => {
         getEventsByRadius()
@@ -63,7 +64,6 @@ const Map: FC<Props> = ({ navigation }) => {
         setTimeout(() => setHackHeight(height - 1), 1000);
     }
 
-    console.log('events :', events);
 
     // const [marker, setMarker] = useState<EventLib.Event | undefined>(null)
     useEffect(() => { console.log('myMarker :', marker) }, [marker]);
@@ -74,6 +74,10 @@ const Map: FC<Props> = ({ navigation }) => {
     useEffect(() => { _getLocationAsync() }, []);
     //useEffect(() => { setRegion(userRegion) }, [userRegion]);
 
+    useEffect(() => {
+        if (loading) setMessageShow(true)
+        else setTimeout(() => setMessageShow(false), 8000);
+    }, [loading]);
 
     const cluster = getCluster(events, region);
 
@@ -205,10 +209,13 @@ const Map: FC<Props> = ({ navigation }) => {
                    
                 </View> */}
 
-                <MenuButton navigation={navigation} />
-                {loading ? <OnMapMessage message={"Loading Events"} /> :
-                    < OnMapMessage message={`${events.length} events found`} />
-                }
+                <MenuButton left="10px" navigation={navigation} icon="menu" />
+                {messageShow &&
+                    <React.Fragment>
+                        {loading ? <OnMapMessage message={"Loading Events"} /> :
+                            < OnMapMessage message={`${events.length} events found`} />
+                        }
+                    </React.Fragment>}
 
 
 
@@ -216,30 +223,10 @@ const Map: FC<Props> = ({ navigation }) => {
             </View>
         )
     else return (
-        <View style={styles.eventDetails}>
-            <TouchableHighlight
-                onPress={() => handleSetMarker(null)}
-                style={styles.backButton}
-            >
-                <Ionicons
-                    style={styles.backButton}
-                    name='md-arrow-back'
-                    color='grey'
-                    size={32}
-
-                />
-
-                {/* <Icon name="md-arrow-back"
-                    type='ionicons'
-                    color="grey" /> */}
-            </TouchableHighlight>
-
-            {/* <Button
-                title={'back'}
-                onPress={() => setMarker(null)}
-            /> */}
+        <React.Fragment>
             <MarkerDetails {...pick(marker, 'properties', 'type', 'id', 'title', 'category', 'body', 'geometry', 'img', 'address')} />
-        </View>
+            <MenuButton left="10px" navigation={navigation} icon="arrow-back" />
+        </React.Fragment>
     )
 
 
@@ -269,35 +256,35 @@ const FadeInView = (props) => {
         </Animated.View>
     );
 }
-const JumpAnimation = (props) => {
-    const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
+// const JumpAnimation = (props) => {
+//     const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
 
-    console.log('fadeAnim :', fadeAnim);
 
-    React.useEffect(() => {
-        Animated.timing(
-            fadeAnim,
-            {
-                toValue: 100,
-                duration: 1000,
-            }
-        ).start();
-    }, [])
 
-    return (
+//     React.useEffect(() => {
+//         Animated.timing(
+//             fadeAnim,
+//             {
+//                 toValue: 100,
+//                 duration: 1000,
+//             }
+//         ).start();
+//     }, [])
 
-        <Animated.View
-            style={{
-                ...props.style,
-                transform: [
-                    { translateY: fadeAnim },
+//     return (
 
-                    { perspective: 1000 }, // without this line this Animation will not render on Android while working fine on iOS
-                ],
-            }}
-        />
-    );
-}
+//         <Animated.View
+//             style={{
+//                 ...props.style,
+//                 transform: [
+//                     { translateY: fadeAnim },
+
+//                     { perspective: 1000 }, // without this line this Animation will not render on Android while working fine on iOS
+//                 ],
+//             }}
+//         />
+//     );
+// }
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,

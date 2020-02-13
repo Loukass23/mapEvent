@@ -22,24 +22,22 @@ interface Props {
   navigation: any
 }
 export const Settings: FC<Props> = ({ navigation }) => {
-  const { height, width } = Dimensions.get('window');
+
   const { handleSetRadius, radius } = useContext(EventContext)
-  const { signOut, user } = useContext(AuthContext)
+
 
   return (
     <Container>
-      <Centered>
-        <Left>
-          <MenuButton navigation={navigation} />
-        </Left>
-      </Centered>
-      <Container>
-        <TopCentered>
-          <Centered>
-            <Text>{titles.settings}</Text>
-          </Centered>
+      <Text>{titles.settings}</Text>
 
-          {/* <View style={styles.welcomeContainer} >
+
+
+
+      <Container>
+
+
+
+        {/* <View style={styles.welcomeContainer} >
               <CheckboxFormX
                 iconColor={Colors.primary}
                 style={{ width: '90%', height: 40 }}
@@ -52,24 +50,25 @@ export const Settings: FC<Props> = ({ navigation }) => {
                 onChecked={(item) => this._onSelect(item)}
               />
             </View> */}
-          <Centered>
-            <Text>Radius: {radius}m</Text>
-            <Slider
-              onValueChange={(radius) => handleSetRadius(radius)}
-              style={styles.slider}
-              value={radius}
-              step={50}
-              minimumValue={5}
-              maximumValue={10000}
-              minimumTrackTintColor="#000000"
-            // maximumTrackTintColor={Colors.primary}
-            />
-          </Centered>
-          <Centered>
-            {/* <EventCategory /> */}
-          </Centered>
-        </TopCentered>
+        <Centered>
+          <Text>Radius: {radius}m</Text>
+          <Slider
+            onValueChange={(radius) => handleSetRadius(radius)}
+            style={styles.slider}
+            value={radius}
+            step={50}
+            minimumValue={5}
+            maximumValue={10000}
+            minimumTrackTintColor="#000000"
+          // maximumTrackTintColor={Colors.primary}
+          />
+        </Centered>
+        <Centered>
+          {/* <EventCategory /> */}
+        </Centered>
+
       </Container>
+      <MenuButton left="10px" navigation={navigation} icon="menu" />
     </Container >
   );
 };

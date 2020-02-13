@@ -24,7 +24,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
         <Container>
             <Centered>
                 <Left>
-                    <MenuButton navigation={navigation} />
+                    <MenuButton icon="menu" left="10px" navigation={navigation} />
                 </Left>
             </Centered>
 

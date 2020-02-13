@@ -59,6 +59,7 @@
     "@types/react": "^16.9.2",
     "@types/react-native": "^0.60.11",
     "@types/react-test-renderer": "^16.9.0",
+    "@types/styled-components": "^4.4.3",
     "@types/supercluster": "^5.0.1",
     "babel-preset-expo": "^6.0.0",
     "react-addons-test-utils": "^15.6.2",

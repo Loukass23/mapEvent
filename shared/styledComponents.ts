@@ -17,7 +17,7 @@ export const ContainerRow = styled.SafeAreaView`
   align-items: center;
   padding: 16px;
   justify-content: space-between;
-  opacity: 0.7;
+  opacity: 0.9;
   background-color: ${colors.creamy};
 `;
 
@@ -85,7 +85,8 @@ export const Cluster = styled.View`
   border-radius: 50px;
 `;
 
-export const TextInput = styled.TextInput.attrs(props => ({
+
+export const TextInput = styled.TextInput.attrs((props: { placeholder: any; password: any; }) => ({
   autoCorrect: false,
   autoCapitalize: 'none',
   returnKeyType: 'done',
@@ -116,15 +117,34 @@ export const Button = styled.TouchableOpacity`
   margin-bottom: 16px;
   margin-top: 16px;
 `;
+export const ActionButton = styled.TouchableOpacity`
+  zIndex: 0;
+  backgroundColor: rgba(250, 250, 250, .8);
+  position: absolute;
+  top: 10px;
+  left: ${(props: { left: string; }) => (props.left ? props.left : '0px')};
+  width: 40px;
+  height: 40px;
+  alignSelf: center;
+  borderRadius: 3px;
+  alignContent: center;
+  justifyContent: center;
+`;
 
 export const Text = styled.Text`
   font-size: 18px;
   font-weight: 500;
-  color: ${props => (props.color ? props.color : colors.dark)};
+  color: ${(props: { color?: string; }) => (props.color ? props.color : colors.dark)};
 `;
 export const TextSmall = styled.Text`
   font-size: 14px;
   font-weight: 400;
   padding: 8px;
-  color: ${props => (props.color ? props.color : colors.dark)};
+  color: ${(props: { color?: string; }) => (props.color ? props.color : colors.dark)};
+`;
+export const Title = styled.Text`
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px;
+  color: ${(props: { color?: string; }) => (props.color ? props.color : colors.dark)};
 `;
