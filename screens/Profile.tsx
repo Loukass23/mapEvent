@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react'
 import MenuButton from '../components/navigation/MenuButton';
 import { AuthContext } from '../context/AuthContext';
-
 import {
     Container,
     Centered,
@@ -18,16 +17,8 @@ interface Props {
 const Profile: React.FC<Props> = ({ navigation }) => {
     const { user } = useContext(AuthContext)
     const [register, setRegister] = useState<boolean>(false)
-
-
     return (
         <Container>
-            <Centered>
-                <Left>
-                    <MenuButton icon="menu" left="10px" navigation={navigation} />
-                </Left>
-            </Centered>
-
             {user?.token ?
                 <Container>
                     <UserInfo />
@@ -41,19 +32,15 @@ const Profile: React.FC<Props> = ({ navigation }) => {
 
                         </Container> :
                         <Container>
-
-
                             <SignUp />
                             <Text onPress={() => setRegister(false)}>{messages.already}</Text>
-
                         </Container>
                     }
                 </React.Fragment>
             }
-
+            <MenuButton icon="menu" left="10px" navigation={navigation} />
         </Container>
     )
-
 }
 export default Profile
 

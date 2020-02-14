@@ -21,7 +21,7 @@ import {
 import ApolloClient from 'apollo-client';
 import { OnMapMessage } from './events/OnMapMessage';
 import { MarkerDetails } from './events/MarkerDetails';
-import { Text, Container, TopCentered } from '../shared'
+import { Text, Container, TopCentered, TextSmall } from '../shared'
 
 
 interface Props {
@@ -106,7 +106,7 @@ const Map: FC<Props> = ({ navigation }) => {
             >
 
                 <View style={styles.flexAlign}>
-                    <Text>Add Event</Text>
+                    <TextSmall>Add Event</TextSmall>
                     <Ionicons
                         onPress={() => onAddEventPress()}
                         name='md-add'

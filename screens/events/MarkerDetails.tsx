@@ -34,6 +34,8 @@ import {
     TextSmall
 } from '../../shared';
 import { MenuButton } from "../../components";
+import { AuthContext } from "../../context/AuthContext";
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -42,7 +44,7 @@ const { height, width } = Dimensions.get('window');
 export const MarkerDetails: React.FC<EventLib.Event> =
     () => {
         const { marker, handleSetMarker, handleEventCUD } = useContext(EventContext)
-
+        const { user } = useContext(AuthContext)
         const { getAddress, eventAddress } = useContext(LocationContext)
 
         React.useEffect(() => {
@@ -54,7 +56,6 @@ export const MarkerDetails: React.FC<EventLib.Event> =
         return (
 
             <Container>
-                {/* <MenuButton navigation={navigation} icon="arrow-back" /> */}
                 {img ?
 
                     <Image
@@ -63,11 +64,10 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                         PlaceholderContent={<ActivityIndicator />}
                     />
                     :
-                    <Centered>
+                    <View style={styles.coverImage}>
                         <FirebaseUpload type="event" />
-                    </Centered>
+                    </View>
                 }
-
                 <TopCentered>
                     <Centered>
                         {eventAddress ? <TextSmall>
@@ -102,7 +102,7 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                         </Centered> :
                         <EventCategory />}
                 </TopCentered>
-
+{user ? <React.Fragment>
                 {id ?
                     <Button
                         onPress={() => handleEventCUD('update')}
@@ -116,6 +116,11 @@ export const MarkerDetails: React.FC<EventLib.Event> =
                         <Text> {buttons.create} </Text>
                     </Button>
                 }
+                </React.Fragment> :
+                    <Container>
+                      
+                        <Text >Log in first</Text>
+                    </Container>}
             </Container>
         )
     }
